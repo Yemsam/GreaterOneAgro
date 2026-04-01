@@ -1156,7 +1156,6 @@ footer {
   font-size: 0.92rem;
 }
 
-.floating-call,
 .floating-whatsapp {
   position: fixed;
   z-index: 1100;
@@ -1164,13 +1163,6 @@ footer {
   color: var(--white);
   font-weight: 800;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
-}
-
-.floating-call {
-  left: 1rem;
-  bottom: 1rem;
-  padding: 0.9rem 1.15rem;
-  background: var(--red);
 }
 
 .floating-whatsapp {
@@ -1323,17 +1315,10 @@ footer {
     grid-template-columns: 1fr;
   }
 
-  .floating-call,
   .floating-whatsapp {
     padding: 0.58rem 0.76rem;
     font-size: 0.78rem;
     line-height: 1.2;
-  }
-
-  .floating-call {
-    left: 0.7rem;
-    bottom: 0.75rem;
-    max-width: 60vw;
   }
 
   .floating-whatsapp {
@@ -1352,13 +1337,8 @@ footer {
     width: 170px;
   }
 
-  .floating-call,
   .floating-whatsapp {
     padding: 0.52rem 0.68rem;
     font-size: 0.74rem;
-  }
-
-  .floating-call {
-    max-width: 56vw;
   }
 }
