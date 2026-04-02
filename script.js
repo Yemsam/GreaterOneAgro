@@ -48,6 +48,40 @@ document.addEventListener('DOMContentLoaded', () => {
     revealEls.forEach((el) => el.classList.add('visible'));
   }
 
+  const autoplayVideos = document.querySelectorAll('[data-autoplay-video]');
+  const playVideo = (video) => {
+    const playPromise = video.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {});
+    }
+  };
+
+  if (autoplayVideos.length > 0) {
+    if ('IntersectionObserver' in window) {
+      const videoObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const video = entry.target;
+            if (entry.isIntersecting) {
+              playVideo(video);
+            } else {
+              video.pause();
+            }
+          });
+        },
+        { threshold: 0.55 }
+      );
+
+      autoplayVideos.forEach((video) => {
+        video.muted = true;
+        video.setAttribute('playsinline', '');
+        videoObserver.observe(video);
+      });
+    } else {
+      autoplayVideos.forEach((video) => playVideo(video));
+    }
+  }
+
   const heroSlider = document.querySelector('[data-hero-slider]');
   if (heroSlider) {
     const heroSlides = heroSlider.querySelectorAll('[data-hero-slide]');

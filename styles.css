@@ -481,6 +481,36 @@ nav {
   align-items: center;
 }
 
+.video-panel {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 1.1rem;
+  align-items: center;
+}
+
+.video-copy h2 {
+  margin: 0 0 0.5rem;
+}
+
+.video-copy p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.video-embed-wrap {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #000;
+}
+
+.autoplay-video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+  object-fit: cover;
+}
+
 .quote-card {
   grid-template-columns: 1fr 300px;
   align-items: center;
@@ -1303,7 +1333,8 @@ footer {
   .project-layout,
   .contact-grid,
   .footer-grid,
-  .impact-band {
+  .impact-band,
+  .video-panel {
     grid-template-columns: 1fr;
   }
 
