@@ -21,5 +21,8 @@
   "homepage": "https://github.com/Yemsam/GreaterOneAgro#readme",
   "dependencies": {
     "stripe": "^21.0.1"
+  },
+  "devDependencies": {
+    "netlify-cli": "^24.9.0"
   }
 }

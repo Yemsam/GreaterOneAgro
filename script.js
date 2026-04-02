@@ -20,6 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  document.querySelectorAll('.floating-whatsapp').forEach((link) => {
+    link.setAttribute('aria-label', 'Chat on WhatsApp');
+    link.setAttribute('title', 'Chat on WhatsApp');
+  });
+
   const revealEls = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver(
