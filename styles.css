@@ -97,6 +97,37 @@ a {
   flex-wrap: wrap;
 }
 
+.top-strip-socials {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.top-strip-social-link {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--white);
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.top-strip-social-link:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.top-strip-social-link svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+
 .call-inline {
   font-weight: 800;
 }
@@ -246,6 +277,9 @@ nav {
   color: var(--white);
   background: var(--red);
   box-shadow: 0 12px 24px rgba(214, 40, 40, 0.35);
+  white-space: nowrap;
+  flex: 0 0 auto;
+  padding: 0.82rem 1.12rem;
 }
 
 .hero {
