@@ -171,7 +171,8 @@
     <div class="container contact-grid">
       <div class="panel card reveal">
         <h2>Register or Enquire</h2>
-        <form name="contact" method="POST" data-netlify="true" class="contact-form">
+        <form name="partnership-enquiry" method="POST" data-netlify="true" class="contact-form">
+          <input type="hidden" name="form-name" value="partnership-enquiry">
           <input type="text" name="name" placeholder="Name" required>
           <input type="tel" name="phone" placeholder="Phone" required>
           <input type="email" name="email" placeholder="Email" required>
@@ -260,7 +261,8 @@
       <button type="button" class="application-close" data-close-application aria-label="Close application form">×</button>
       <h2 id="applicationTitle">Apply for 1-Acre Partnership Slot</h2>
       <p>Complete your details, choose payment method, and submit to finalize your application.</p>
-      <form class="application-form" data-application-form>
+      <form name="partnership-application" method="POST" data-netlify="true" class="application-form" data-application-form>
+        <input type="hidden" name="form-name" value="partnership-application">
         <div class="application-grid">
           <input type="text" name="fullName" placeholder="Full Name" required>
           <input type="tel" name="phone" placeholder="Phone Number" required>
