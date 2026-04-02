@@ -42,7 +42,8 @@
       <div class="panel card reveal">
         <h1 class="section-title">Contact Us</h1>
         <p class="section-subtitle">Send a message and our team will guide you through the Okra and Plantain partnership process.</p>
-        <form name="contact" method="POST" data-netlify="true" class="contact-form">
+        <form name="contact" method="POST" action="contact-success.html" data-netlify="true" class="contact-form">
+          <input type="hidden" name="form-name" value="contact">
           <input type="text" name="name" placeholder="Full Name" required>
           <input type="email" name="email" placeholder="Email Address" required>
           <input type="tel" name="phone" placeholder="Phone Number" required>
