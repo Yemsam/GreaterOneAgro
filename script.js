@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const appModal = document.querySelector('[data-application-modal]');
   const openAppBtn = document.querySelector('[data-open-application]');
   const closeAppBtn = document.querySelector('[data-close-application]');
+  const appForm = document.querySelector('[data-application-form]');
 
   const closeApplicationModal = () => {
     if (!appModal) {
@@ -165,6 +166,64 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && !appModal.hidden) {
         closeApplicationModal();
+      }
+    });
+  }
+
+  if (appForm) {
+    appForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const submitButton = appForm.querySelector('button[type="submit"]');
+      const originalButtonText = submitButton?.textContent || '';
+      const formData = new FormData(appForm);
+      const slots = Number(formData.get('slots') || 1);
+      const slotAmounts = {
+        1: 710600,
+        2: 1421200,
+        3: 2131800
+      };
+
+      const amountInNaira = slotAmounts[slots] || 710600;
+      const endpoint = appForm.getAttribute('data-checkout-endpoint') || '/api/create-checkout';
+      const payload = {
+        amountInNaira,
+        email: String(formData.get('email') || ''),
+        fullName: String(formData.get('fullName') || ''),
+        phone: String(formData.get('phone') || ''),
+        slots: String(formData.get('slots') || ''),
+        paymentMethod: String(formData.get('paymentMethod') || ''),
+        notes: String(formData.get('notes') || '')
+      };
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Redirecting to secure checkout...';
+      }
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.url) {
+          throw new Error(data.error || 'Unable to start secure checkout. Please try again.');
+        }
+
+        window.location.href = data.url;
+      } catch (error) {
+        window.alert(error.message || 'Unable to start secure checkout. Please try again.');
+
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = originalButtonText;
+        }
       }
     });
   }

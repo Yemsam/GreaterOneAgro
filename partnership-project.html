@@ -261,7 +261,7 @@
       <button type="button" class="application-close" data-close-application aria-label="Close application form">×</button>
       <h2 id="applicationTitle">Apply for 1-Acre Partnership Slot</h2>
       <p>Complete your details, choose payment method, and submit to finalize your application.</p>
-      <form name="partnership-application" method="POST" action="application-success.html" data-netlify="true" class="application-form" data-application-form>
+      <form name="partnership-application" method="POST" data-netlify="true" class="application-form" data-application-form data-checkout-endpoint="/api/create-checkout">
         <input type="hidden" name="form-name" value="partnership-application">
         <div class="application-grid">
           <input type="text" name="fullName" placeholder="Full Name" required>
