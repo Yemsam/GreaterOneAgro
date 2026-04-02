@@ -5,11 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (toggle && nav) {
     toggle.addEventListener('click', () => {
       nav.classList.toggle('open');
+      document.body.classList.toggle('menu-open', nav.classList.contains('open'));
       toggle.setAttribute('aria-expanded', String(nav.classList.contains('open')));
     });
 
     nav.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', () => nav.classList.remove('open'));
+      link.addEventListener('click', () => {
+        nav.classList.remove('open');
+        document.body.classList.remove('menu-open');
+      });
     });
   }
 

@@ -1296,6 +1296,15 @@ footer {
 }
 
 @media (max-width: 760px) {
+  body.menu-open::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(9, 42, 12, 0.3);
+    z-index: 1200;
+    pointer-events: none;
+  }
+
   .nav-wrap {
     gap: 0.55rem;
   }
@@ -1316,25 +1325,61 @@ footer {
     max-height: 44px;
   }
 
+  nav {
+    position: static;
+  }
+
   .nav-links {
-    position: absolute;
-    top: 78px;
-    left: 0;
-    right: 0;
-    background: #ffffff;
-    padding: 0.85rem 1rem 1rem;
+    position: fixed;
+    top: 94px;
+    left: 0.7rem;
+    right: 0.7rem;
+    background: linear-gradient(160deg, rgba(9, 53, 16, 0.96), rgba(7, 41, 12, 0.95));
+    padding: 0.7rem 1rem;
     flex-direction: column;
-    border-bottom: 1px solid var(--border);
-    transform: scaleY(0);
-    transform-origin: top;
+    border: 1px solid rgba(147, 196, 125, 0.18);
+    border-radius: 18px;
+    box-shadow: 0 16px 32px rgba(7, 33, 9, 0.34);
+    transform: translateY(-6px) scale(0.98);
+    transform-origin: top center;
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: 0.25s ease;
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+    z-index: 1300;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+
+  .nav-links li {
+    width: 100%;
+    border-bottom: 1px solid rgba(182, 225, 160, 0.16);
+  }
+
+  .nav-links li:last-child {
+    border-bottom: 0;
+  }
+
+  .nav-links a {
+    display: block;
+    width: 100%;
+    padding: 0.95rem 0.2rem;
+    color: #f5f9f5;
+    border-radius: 0;
+    font-size: 0.98rem;
+    letter-spacing: 0.2px;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    background: transparent;
+    color: #ffc107;
   }
 
   .nav-links.open {
-    transform: scaleY(1);
+    transform: translateY(0) scale(1);
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
   }
 
