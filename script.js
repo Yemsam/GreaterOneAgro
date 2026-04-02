@@ -138,8 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const appModal = document.querySelector('[data-application-modal]');
   const openAppBtn = document.querySelector('[data-open-application]');
   const closeAppBtn = document.querySelector('[data-close-application]');
-  const appForm = document.querySelector('[data-application-form]');
-  const appSuccess = document.querySelector('[data-application-success]');
 
   const closeApplicationModal = () => {
     if (!appModal) {
@@ -170,16 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-
-  appForm?.addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    if (appSuccess) {
-      appSuccess.hidden = false;
-    }
-
-    appForm.reset();
-  });
 
   const galleryFigures = Array.from(document.querySelectorAll('.gallery-grid figure'));
   const galleryLightbox = document.querySelector('[data-gallery-lightbox]');
