@@ -529,6 +529,43 @@ nav {
   object-fit: cover;
 }
 
+.video-embed-wrap.portrait-video {
+  width: min(100%, 420px);
+  margin-inline: auto;
+  aspect-ratio: 9 / 16;
+  max-height: 76vh;
+}
+
+.video-embed-wrap.portrait-video .autoplay-video,
+.video-embed-wrap.portrait-video iframe {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 9 / 16;
+  display: block;
+  border: 0;
+  object-fit: cover;
+}
+
+.gallery-section-video {
+  margin-top: 1rem;
+}
+
+.gallery-section-video .video-copy {
+  margin-bottom: 0.75rem;
+}
+
+.gallery-section-video .video-copy h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  color: var(--green);
+}
+
+.gallery-section-video .video-copy p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
 .quote-card {
   grid-template-columns: 1fr 300px;
   align-items: center;
