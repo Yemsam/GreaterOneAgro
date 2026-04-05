@@ -605,6 +605,7 @@ nav {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 .testimonial-carousel {
@@ -814,12 +815,12 @@ nav {
 }
 
 .gallery-grid {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .gallery-grid figure {
   margin: 0;
-  min-height: 220px;
+  aspect-ratio: 3 / 4;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: var(--shadow);
@@ -833,6 +834,20 @@ nav {
   color: var(--white);
   font-size: 0.9rem;
   background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.65));
+}
+
+.gallery-section {
+  margin-bottom: 3.2rem;
+}
+
+.gallery-section-title {
+  margin: 0 0 1.6rem;
+  font-size: clamp(1.3rem, 2vw, 1.8rem);
+  font-weight: 600;
+  color: var(--green);
+  border-bottom: 2px solid var(--yellow);
+  padding-bottom: 0.8rem;
+  display: inline-block;
 }
 
 form {
@@ -1487,6 +1502,10 @@ footer {
   .gallery-grid,
   .team-grid {
     grid-template-columns: 1fr;
+  }
+
+  .gallery-grid figure {
+    aspect-ratio: auto;
   }
 
   .project-highlights,
