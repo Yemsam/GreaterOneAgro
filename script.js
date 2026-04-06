@@ -1,4 +1,34 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  const loadPartial = async (selector, url) => {
+    const mount = document.querySelector(selector);
+
+    if (!mount) {
+      return;
+    }
+
+    try {
+      const response = await fetch(url, { cache: 'no-cache' });
+
+      if (!response.ok) {
+        throw new Error(`Unable to load ${url}`);
+      }
+
+      mount.outerHTML = await response.text();
+    } catch {
+      mount.innerHTML = '';
+    }
+  };
+
+  await Promise.all([
+    loadPartial('[data-site-header], header.site-header', 'header.html'),
+    loadPartial('[data-site-footer], footer', 'footer.html')
+  ]);
+
+  const currentYear = new Date().getFullYear();
+  document.querySelectorAll('[data-current-year]').forEach((element) => {
+    element.textContent = String(currentYear);
+  });
+
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('.nav-links');
 
