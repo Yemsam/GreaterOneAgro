@@ -314,13 +314,56 @@
         <section class="application-step-panel is-active" data-app-step-panel="1">
           <h3 class="application-step-title">Step 1: Personal Details</h3>
           <div class="application-grid">
-            <input type="text" name="fullName" placeholder="Full Name" required>
-            <input type="tel" name="phone" placeholder="Phone Number" required>
-            <input type="email" name="email" placeholder="Email Address" required>
-            <input type="text" name="address" placeholder="Residential Address" required>
-            <input type="text" name="nextOfKinName" placeholder="Next of Kin Name" required>
-            <input type="tel" name="nextOfKinPhone" placeholder="Next of Kin Phone Number" required>
-            <input type="text" name="nextOfKinRelationship" placeholder="Relationship with Next of Kin" required>
+            <div class="form-field">
+              <label for="fullNameInput">Full Name <span class="required-star">*</span></label>
+              <input id="fullNameInput" type="text" name="fullName" placeholder="Full Name" required>
+            </div>
+            <div class="form-field">
+              <label for="phoneInput">Phone Number (with country code) <span class="required-star">*</span></label>
+              <input id="phoneInput" type="tel" name="phone" placeholder="e.g. +2347050903309" pattern="^\+[1-9]\d{7,14}$" required>
+            </div>
+            <div class="form-field">
+              <label for="emailInput">Email Address <span class="required-star">*</span></label>
+              <input id="emailInput" type="email" name="email" placeholder="Email Address" required>
+            </div>
+            <div class="form-field">
+              <label for="occupationInput">Occupation <span class="required-star">*</span></label>
+              <input id="occupationInput" type="text" name="occupation" placeholder="Occupation" required>
+            </div>
+            <div class="form-field">
+              <label for="addressInput">Residential Address <span class="required-star">*</span></label>
+              <input id="addressInput" type="text" name="address" placeholder="Residential Address" required>
+            </div>
+            <div class="form-field">
+              <label for="nextOfKinNameInput">Next of Kin Name <span class="required-star">*</span></label>
+              <input id="nextOfKinNameInput" type="text" name="nextOfKinName" placeholder="Next of Kin Name" required>
+            </div>
+            <div class="form-field">
+              <label for="nextOfKinPhoneInput">Next of Kin Phone Number (with country code) <span class="required-star">*</span></label>
+              <input id="nextOfKinPhoneInput" type="tel" name="nextOfKinPhone" placeholder="e.g. +2348012345678" pattern="^\+[1-9]\d{7,14}$" required>
+            </div>
+            <div class="form-field">
+              <label for="nextOfKinRelationshipSelect">Relationship with Next of Kin <span class="required-star">*</span></label>
+              <select id="nextOfKinRelationshipSelect" name="nextOfKinRelationship" data-relationship-select required>
+                <option value="" selected disabled>Select Relationship</option>
+                <option value="Father">Father</option>
+                <option value="Mother">Mother</option>
+                <option value="Brother">Brother</option>
+                <option value="Sister">Sister</option>
+                <option value="Aunt">Aunt</option>
+                <option value="Niece">Niece</option>
+                <option value="Uncle">Uncle</option>
+                <option value="Wife">Wife</option>
+                <option value="Husband">Husband</option>
+                <option value="Nephew">Nephew</option>
+                <option value="Friend">Friend</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-field relationship-other-wrap" data-relationship-other-wrap hidden>
+              <label for="nextOfKinRelationshipOtherInput">Please specify relationship <span class="required-star">*</span></label>
+              <input id="nextOfKinRelationshipOtherInput" type="text" name="nextOfKinRelationshipOther" data-relationship-other-input placeholder="Type relationship">
+            </div>
           </div>
           <div class="form-actions">
             <button class="btn btn-primary" type="button" data-app-next="2">Continue</button>
@@ -330,22 +373,30 @@
         <section class="application-step-panel" data-app-step-panel="2" hidden>
           <h3 class="application-step-title">Step 2: Investment Details</h3>
           <div class="application-grid">
-            <select name="investmentType" required>
-              <option value="" selected disabled>Select Investment Type</option>
-              <option value="okra">Okra</option>
-              <option value="plantain">Plantain</option>
-              <option value="okra-plantain">Okra and Plantain</option>
-              <option value="cocoa">Cocoa</option>
-            </select>
-            <select name="acresSelection" required data-acre-select>
-              <option value="" selected disabled>Select Acres for Investment</option>
-              <option value="1">1 Acre (₦710,600)</option>
-              <option value="2">2 Acres (₦1,421,200)</option>
-              <option value="3">3 Acres (₦2,131,800)</option>
-              <option value="others">Others</option>
-            </select>
+            <div class="form-field">
+              <label for="investmentTypeSelect">Investment Type <span class="required-star">*</span></label>
+              <select id="investmentTypeSelect" name="investmentType" required>
+                <option value="" selected disabled>Select Investment Type</option>
+                <option value="okra">Okra</option>
+                <option value="plantain">Plantain</option>
+                <option value="okra-plantain">Okra and Plantain</option>
+                <option value="cocoa">Cocoa</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="acresSelectionSelect">Acres for Investment <span class="required-star">*</span></label>
+              <select id="acresSelectionSelect" name="acresSelection" required data-acre-select>
+                <option value="" selected disabled>Select Acres for Investment</option>
+                <option value="1">1 Acre (₦710,600)</option>
+                <option value="2">2 Acres (₦1,421,200)</option>
+                <option value="3">3 Acres (₦2,131,800)</option>
+                <option value="others">Others</option>
+              </select>
+            </div>
             <div class="custom-acre-wrap" data-custom-acre-wrap hidden>
+              <label for="customAcreInput">Enter custom acres (must be above 3) <span class="required-star">*</span></label>
               <input
+                id="customAcreInput"
                 type="text"
                 name="customAcres"
                 data-custom-acre-input
@@ -365,31 +416,26 @@
         <section class="application-step-panel" data-app-step-panel="3" hidden>
           <h3 class="application-step-title">Step 3: Summary</h3>
           <div class="application-summary" data-application-summary></div>
-          <div class="form-actions">
-            <button class="btn btn-call" type="button" data-app-back="2">Back</button>
-            <button class="btn btn-primary" type="button" data-app-make-payment>Make Payment</button>
-          </div>
-          <div class="payment-options" data-payment-options hidden>
-            <select name="paymentMethod" required disabled>
+          <div class="payment-options">
+            <label for="paymentMethodSelect">Payment Method <span class="required-star">*</span></label>
+            <select id="paymentMethodSelect" name="paymentMethod" required>
               <option value="" selected disabled>Select Payment Method</option>
               <option value="card">Card Payment</option>
               <option value="bank-transfer">Bank Transfer</option>
               <option value="paypal">PayPal</option>
             </select>
             <label class="checkbox-row">
-              <input type="checkbox" name="confirmApplication" required disabled>
-              I confirm that the information provided is correct and I am ready to proceed with payment.
+              <input type="checkbox" name="confirmApplication" required>
+              I confirm that the information provided is correct and I am ready to proceed with payment. <span class="required-star">*</span>
             </label>
-            <div class="form-actions">
-              <button class="btn btn-green" type="submit" disabled>Complete Application and Payment</button>
-            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-call" type="button" data-app-back="2">Back</button>
+            <button class="btn btn-green" type="submit">Complete Application and Payment</button>
           </div>
         </section>
 
         <div class="application-success" data-application-success hidden></div>
-        <div class="form-actions" data-application-fallback hidden>
-          <button class="btn btn-green" type="submit">Complete Application and Payment</button>
-        </div>
       </form>
     </div>
   </div>
