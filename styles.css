@@ -1057,10 +1057,66 @@ textarea {
   margin-top: 0.9rem;
 }
 
+.application-steps {
+  margin-top: 0.85rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.55rem;
+}
+
+.application-step {
+  border: 1px solid var(--border);
+  background: #f5f9f2;
+  color: #2f4d2f;
+  border-radius: 10px;
+  padding: 0.7rem 0.6rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.application-step.is-active {
+  background: rgba(0, 100, 0, 0.12);
+  border-color: rgba(0, 100, 0, 0.3);
+  color: var(--green);
+}
+
+.application-step-panel {
+  margin-top: 0.75rem;
+}
+
 .application-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
+}
+
+.custom-acre-wrap {
+  grid-column: 1 / -1;
+}
+
+.estimated-amount {
+  margin: 0.75rem 0;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.application-summary {
+  margin-top: 0.2rem;
+  background: #f7fbf5;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.85rem;
+}
+
+.application-summary p {
+  margin: 0.28rem 0;
+}
+
+.payment-options {
+  margin-top: 0.8rem;
+  display: grid;
+  gap: 0.7rem;
 }
 
 .application-success {

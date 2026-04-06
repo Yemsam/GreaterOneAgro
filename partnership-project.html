@@ -302,30 +302,88 @@
     <div class="application-dialog panel" role="dialog" aria-modal="true" aria-labelledby="applicationTitle">
       <button type="button" class="application-close" data-close-application aria-label="Close application form">×</button>
       <h2 id="applicationTitle">Apply for a Minimum 1-Acre Partnership</h2>
-      <p>Complete your details, choose payment method, and submit to finalize your application.</p>
+      <p>Complete your details in steps, review your summary, then continue to payment.</p>
+      <div class="application-steps" role="tablist" aria-label="Application steps">
+        <button type="button" class="application-step is-active" data-app-step-trigger="1" aria-current="step">1. Personal Details</button>
+        <button type="button" class="application-step" data-app-step-trigger="2">2. Investment</button>
+        <button type="button" class="application-step" data-app-step-trigger="3">3. Summary</button>
+      </div>
       <form name="partnership-application" method="POST" data-netlify="true" class="application-form" data-application-form data-checkout-endpoint="/api/create-checkout">
         <input type="hidden" name="form-name" value="partnership-application">
-        <div class="application-grid">
-          <input type="text" name="fullName" placeholder="Full Name" required>
-          <input type="tel" name="phone" placeholder="Phone Number" required>
-          <input type="email" name="email" placeholder="Email Address" required>
-          <input type="text" name="address" placeholder="Residential Address" required>
-          <select name="slots" required>
-            <option value="" selected disabled>Select Number of Slots</option>
-            <option value="1">1 Acre Minimum (₦710,600)</option>
-            <option value="2">2 Slots (₦1,421,200)</option>
-            <option value="3">3 Slots (₦2,131,800)</option>
-          </select>
-          <select name="paymentMethod" required>
-            <option value="" selected disabled>Select Payment Method</option>
-            <option value="card">Card Payment</option>
-            <option value="bank-transfer">Bank Transfer</option>
-            <option value="ussd">PayPal</option>
-          </select>
-        </div>
-        <textarea name="notes" placeholder="Optional note (e.g. preferred start month)"></textarea>
-        <label class="checkbox-row"><input type="checkbox" required> I confirm that the information provided is correct and I am ready to proceed with payment.</label>
-        <div class="form-actions">
+        <section class="application-step-panel is-active" data-app-step-panel="1">
+          <div class="application-grid">
+            <input type="text" name="fullName" placeholder="Full Name" required>
+            <input type="tel" name="phone" placeholder="Phone Number" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <input type="text" name="address" placeholder="Residential Address" required>
+            <input type="text" name="nextOfKinName" placeholder="Next of Kin Name" required>
+            <input type="tel" name="nextOfKinPhone" placeholder="Next of Kin Phone Number" required>
+            <input type="text" name="nextOfKinRelationship" placeholder="Relationship with Next of Kin" required>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" type="button" data-app-next="2">Continue</button>
+          </div>
+        </section>
+
+        <section class="application-step-panel" data-app-step-panel="2" hidden>
+          <div class="application-grid">
+            <select name="investmentType" required>
+              <option value="" selected disabled>Select Investment Type</option>
+              <option value="okra">Okra</option>
+              <option value="plantain">Plantain</option>
+              <option value="okra-plantain">Okra and Plantain</option>
+              <option value="cocoa">Cocoa</option>
+            </select>
+            <select name="acresSelection" required data-acre-select>
+              <option value="" selected disabled>Select Acres for Investment</option>
+              <option value="1">1 Acre (₦710,600)</option>
+              <option value="2">2 Acres (₦1,421,200)</option>
+              <option value="3">3 Acres (₦2,131,800)</option>
+              <option value="others">Others</option>
+            </select>
+            <div class="custom-acre-wrap" data-custom-acre-wrap hidden>
+              <input
+                type="text"
+                name="customAcres"
+                data-custom-acre-input
+                inputmode="decimal"
+                placeholder="Enter custom acres (must be more than 3)"
+              >
+            </div>
+          </div>
+          <p class="estimated-amount">Estimated amount: <strong data-estimated-amount>₦0</strong></p>
+          <textarea name="notes" placeholder="Optional note (e.g. preferred start month)"></textarea>
+          <div class="form-actions">
+            <button class="btn btn-call" type="button" data-app-back="1">Back</button>
+            <button class="btn btn-primary" type="button" data-app-next="3">Continue</button>
+          </div>
+        </section>
+
+        <section class="application-step-panel" data-app-step-panel="3" hidden>
+          <div class="application-summary" data-application-summary></div>
+          <div class="form-actions">
+            <button class="btn btn-call" type="button" data-app-back="2">Back</button>
+            <button class="btn btn-primary" type="button" data-app-make-payment>Make Payment</button>
+          </div>
+          <div class="payment-options" data-payment-options hidden>
+            <select name="paymentMethod" required disabled>
+              <option value="" selected disabled>Select Payment Method</option>
+              <option value="card">Card Payment</option>
+              <option value="bank-transfer">Bank Transfer</option>
+              <option value="paypal">PayPal</option>
+            </select>
+            <label class="checkbox-row">
+              <input type="checkbox" name="confirmApplication" required disabled>
+              I confirm that the information provided is correct and I am ready to proceed with payment.
+            </label>
+            <div class="form-actions">
+              <button class="btn btn-green" type="submit" disabled>Complete Application and Payment</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="application-success" data-application-success hidden></div>
+        <div class="form-actions" data-application-fallback hidden>
           <button class="btn btn-green" type="submit">Complete Application and Payment</button>
         </div>
       </form>

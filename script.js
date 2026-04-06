@@ -251,6 +251,155 @@ document.addEventListener('DOMContentLoaded', async () => {
   const openAppBtn = document.querySelector('[data-open-application]');
   const closeAppBtn = document.querySelector('[data-close-application]');
   const appForm = document.querySelector('[data-application-form]');
+  const appStepTriggers = Array.from(document.querySelectorAll('[data-app-step-trigger]'));
+  const appStepPanels = Array.from(document.querySelectorAll('[data-app-step-panel]'));
+  const appNextButtons = Array.from(document.querySelectorAll('[data-app-next]'));
+  const appBackButtons = Array.from(document.querySelectorAll('[data-app-back]'));
+  const makePaymentButton = document.querySelector('[data-app-make-payment]');
+  const paymentOptions = document.querySelector('[data-payment-options]');
+  const paymentMethodSelect = appForm?.querySelector('select[name="paymentMethod"]');
+  const confirmApplicationInput = appForm?.querySelector('input[name="confirmApplication"]');
+  const finalSubmitButton = appForm?.querySelector('button[type="submit"]');
+  const investmentTypeSelect = appForm?.querySelector('select[name="investmentType"]');
+  const acreSelect = appForm?.querySelector('[data-acre-select]');
+  const customAcreWrap = appForm?.querySelector('[data-custom-acre-wrap]');
+  const customAcreInput = appForm?.querySelector('[data-custom-acre-input]');
+  const summaryContainer = appForm?.querySelector('[data-application-summary]');
+  const estimatedAmount = appForm?.querySelector('[data-estimated-amount]');
+
+  const formatCurrency = (amount) =>
+    `₦${Number(amount || 0).toLocaleString('en-NG', { maximumFractionDigits: 2 })}`;
+
+  const getSelectedAcreage = () => {
+    if (!acreSelect) {
+      return 0;
+    }
+
+    if (acreSelect.value === 'others') {
+      const customValue = Number(customAcreInput?.value || 0);
+      return customValue;
+    }
+
+    return Number(acreSelect.value || 0);
+  };
+
+  const updateEstimatedAmount = () => {
+    const acres = getSelectedAcreage();
+    const amount = acres > 0 ? acres * 710600 : 0;
+
+    if (estimatedAmount) {
+      estimatedAmount.textContent = formatCurrency(amount);
+    }
+  };
+
+  const setStep = (step) => {
+    appStepPanels.forEach((panel) => {
+      const isActive = panel.getAttribute('data-app-step-panel') === String(step);
+      panel.hidden = !isActive;
+      panel.classList.toggle('is-active', isActive);
+    });
+
+    appStepTriggers.forEach((trigger) => {
+      const isActive = trigger.getAttribute('data-app-step-trigger') === String(step);
+      trigger.classList.toggle('is-active', isActive);
+      trigger.setAttribute('aria-current', isActive ? 'step' : 'false');
+    });
+  };
+
+  const validateStep1 = () => {
+    if (!appForm) {
+      return false;
+    }
+
+    const stepOneFields = [
+      'fullName',
+      'phone',
+      'email',
+      'address',
+      'nextOfKinName',
+      'nextOfKinPhone',
+      'nextOfKinRelationship'
+    ];
+
+    for (const fieldName of stepOneFields) {
+      const field = appForm.querySelector(`[name="${fieldName}"]`);
+      if (field && !field.value.trim()) {
+        field.reportValidity();
+        field.focus();
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const validateStep2 = () => {
+    if (!investmentTypeSelect || !acreSelect) {
+      return false;
+    }
+
+    if (!investmentTypeSelect.value) {
+      investmentTypeSelect.reportValidity();
+      investmentTypeSelect.focus();
+      return false;
+    }
+
+    if (!acreSelect.value) {
+      acreSelect.reportValidity();
+      acreSelect.focus();
+      return false;
+    }
+
+    if (acreSelect.value === 'others') {
+      const customValue = customAcreInput?.value.trim() || '';
+
+      if (!/^\d+(\.\d+)?$/.test(customValue)) {
+        customAcreInput?.setCustomValidity('Enter a valid number using digits and optional decimal point.');
+        customAcreInput?.reportValidity();
+        customAcreInput?.focus();
+        return false;
+      }
+
+      const customNumber = Number(customValue);
+      if (customNumber <= 3) {
+        customAcreInput?.setCustomValidity('Custom acreage must be greater than 3.');
+        customAcreInput?.reportValidity();
+        customAcreInput?.focus();
+        return false;
+      }
+
+      customAcreInput?.setCustomValidity('');
+    }
+
+    return true;
+  };
+
+  const renderSummary = () => {
+    if (!appForm || !summaryContainer) {
+      return;
+    }
+
+    const formData = new FormData(appForm);
+    const acres = getSelectedAcreage();
+    const amount = acres * 710600;
+    const investmentType = String(formData.get('investmentType') || '')
+      .split('-')
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' ');
+
+    summaryContainer.innerHTML = `
+      <p><strong>Full Name:</strong> ${String(formData.get('fullName') || '')}</p>
+      <p><strong>Phone:</strong> ${String(formData.get('phone') || '')}</p>
+      <p><strong>Email:</strong> ${String(formData.get('email') || '')}</p>
+      <p><strong>Address:</strong> ${String(formData.get('address') || '')}</p>
+      <p><strong>Next of Kin:</strong> ${String(formData.get('nextOfKinName') || '')}</p>
+      <p><strong>Next of Kin Phone:</strong> ${String(formData.get('nextOfKinPhone') || '')}</p>
+      <p><strong>Relationship:</strong> ${String(formData.get('nextOfKinRelationship') || '')}</p>
+      <p><strong>Investment Type:</strong> ${investmentType}</p>
+      <p><strong>Total Acres:</strong> ${acres}</p>
+      <p><strong>Estimated Amount:</strong> ${formatCurrency(amount)}</p>
+    `;
+  };
 
   const closeApplicationModal = () => {
     if (!appModal) {
@@ -259,12 +408,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     appModal.hidden = true;
     document.body.style.overflow = '';
+    setStep(1);
+    if (paymentOptions) {
+      paymentOptions.hidden = true;
+    }
+    if (paymentMethodSelect) {
+      paymentMethodSelect.disabled = true;
+      paymentMethodSelect.value = '';
+    }
+    if (confirmApplicationInput) {
+      confirmApplicationInput.disabled = true;
+      confirmApplicationInput.checked = false;
+    }
+    if (finalSubmitButton) {
+      finalSubmitButton.disabled = true;
+      finalSubmitButton.textContent = 'Complete Application and Payment';
+    }
   };
 
   if (openAppBtn && appModal) {
     openAppBtn.addEventListener('click', () => {
       appModal.hidden = false;
       document.body.style.overflow = 'hidden';
+      setStep(1);
+      updateEstimatedAmount();
     });
 
     closeAppBtn?.addEventListener('click', closeApplicationModal);
@@ -282,28 +449,121 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  if (acreSelect) {
+    acreSelect.addEventListener('change', () => {
+      const showCustom = acreSelect.value === 'others';
+      if (customAcreWrap) {
+        customAcreWrap.hidden = !showCustom;
+      }
+
+      if (!showCustom && customAcreInput) {
+        customAcreInput.value = '';
+        customAcreInput.setCustomValidity('');
+      }
+
+      updateEstimatedAmount();
+    });
+  }
+
+  if (customAcreInput) {
+    customAcreInput.addEventListener('input', () => {
+      const sanitized = customAcreInput.value
+        .replace(/[^0-9.]/g, '')
+        .replace(/(\..*)\./g, '$1');
+
+      customAcreInput.value = sanitized;
+      customAcreInput.setCustomValidity('');
+      updateEstimatedAmount();
+    });
+  }
+
+  appNextButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const targetStep = Number(button.getAttribute('data-app-next'));
+
+      if (targetStep === 2 && !validateStep1()) {
+        return;
+      }
+
+      if (targetStep === 3) {
+        if (!validateStep2()) {
+          return;
+        }
+        renderSummary();
+      }
+
+      setStep(targetStep);
+    });
+  });
+
+  appBackButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const targetStep = Number(button.getAttribute('data-app-back'));
+      setStep(targetStep);
+    });
+  });
+
+  makePaymentButton?.addEventListener('click', () => {
+    if (!validateStep1() || !validateStep2()) {
+      return;
+    }
+
+    renderSummary();
+
+    if (paymentOptions) {
+      paymentOptions.hidden = false;
+    }
+
+    if (paymentMethodSelect) {
+      paymentMethodSelect.disabled = false;
+    }
+
+    if (confirmApplicationInput) {
+      confirmApplicationInput.disabled = false;
+    }
+
+    if (finalSubmitButton) {
+      finalSubmitButton.disabled = false;
+    }
+  });
+
   if (appForm) {
     appForm.addEventListener('submit', async (event) => {
       event.preventDefault();
 
+      if (!validateStep1() || !validateStep2()) {
+        return;
+      }
+
+      if (paymentMethodSelect && !paymentMethodSelect.value) {
+        paymentMethodSelect.reportValidity();
+        paymentMethodSelect.focus();
+        return;
+      }
+
+      if (confirmApplicationInput && !confirmApplicationInput.checked) {
+        confirmApplicationInput.reportValidity();
+        confirmApplicationInput.focus();
+        return;
+      }
+
       const submitButton = appForm.querySelector('button[type="submit"]');
       const originalButtonText = submitButton?.textContent || '';
       const formData = new FormData(appForm);
-      const slots = Number(formData.get('slots') || 1);
-      const slotAmounts = {
-        1: 710600,
-        2: 1421200,
-        3: 2131800
-      };
-
-      const amountInNaira = slotAmounts[slots] || 710600;
+      const acres = getSelectedAcreage();
+      const amountInNaira = acres * 710600;
       const endpoint = appForm.getAttribute('data-checkout-endpoint') || '/api/create-checkout';
       const payload = {
         amountInNaira,
         email: String(formData.get('email') || ''),
         fullName: String(formData.get('fullName') || ''),
         phone: String(formData.get('phone') || ''),
-        slots: String(formData.get('slots') || ''),
+        slots: String(acres || ''),
+        acres: String(acres || ''),
+        investmentType: String(formData.get('investmentType') || ''),
+        nextOfKinName: String(formData.get('nextOfKinName') || ''),
+        nextOfKinPhone: String(formData.get('nextOfKinPhone') || ''),
+        nextOfKinRelationship: String(formData.get('nextOfKinRelationship') || ''),
         paymentMethod: String(formData.get('paymentMethod') || ''),
         notes: String(formData.get('notes') || '')
       };
