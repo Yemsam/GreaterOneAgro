@@ -265,6 +265,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const relationshipOtherInput = appForm?.querySelector('[data-relationship-other-input]');
   const bankTransferToggle = appForm?.querySelector('[data-bank-transfer-toggle]');
   const bankTransferDetails = appForm?.querySelector('[data-bank-transfer-details]');
+  const paymentAmountDisplay = appForm?.querySelector('[data-payment-amount]');
+  const paymentProofInput = appForm?.querySelector('[data-payment-proof-input]');
+  const selectedPaymentMethodInput = appForm?.querySelector('[data-selected-payment-method]');
+  const paypalLink = appForm?.querySelector('[data-paypal-link]');
+  const paystackLink = appForm?.querySelector('[data-paystack-link]');
+  const flutterwaveLink = appForm?.querySelector('[data-flutterwave-link]');
   const summaryContainer = appForm?.querySelector('[data-application-summary]');
   const estimatedAmount = appForm?.querySelector('[data-estimated-amount]');
   const appError = appForm?.querySelector('[data-app-error]');
@@ -315,6 +321,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (estimatedAmount) {
       estimatedAmount.textContent = formatCurrency(amount);
+    }
+
+    if (paymentAmountDisplay) {
+      paymentAmountDisplay.textContent = formatCurrency(amount);
+    }
+  };
+
+  const selectPaymentMethod = (method) => {
+    if (selectedPaymentMethodInput) {
+      selectedPaymentMethodInput.value = method;
+    }
+
+    const methodButtons = [bankTransferToggle, paypalLink, paystackLink, flutterwaveLink];
+    methodButtons.forEach((button) => button?.classList.remove('is-selected'));
+
+    if (method === 'bank-transfer') {
+      bankTransferToggle?.classList.add('is-selected');
+    }
+
+    if (method === 'paypal') {
+      paypalLink?.classList.add('is-selected');
+    }
+
+    if (method === 'paystack') {
+      paystackLink?.classList.add('is-selected');
+    }
+
+    if (method === 'flutterwave') {
+      flutterwaveLink?.classList.add('is-selected');
     }
   };
 
@@ -481,6 +516,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (bankTransferDetails) {
       bankTransferDetails.hidden = true;
     }
+    if (paymentProofInput) {
+      paymentProofInput.value = '';
+    }
+    if (selectedPaymentMethodInput) {
+      selectedPaymentMethodInput.value = '';
+    }
+    [bankTransferToggle, paypalLink, paystackLink, flutterwaveLink].forEach((button) => button?.classList.remove('is-selected'));
     updateEstimatedAmount();
   };
 
@@ -598,12 +640,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (bankTransferDetails) {
       bankTransferDetails.hidden = false;
     }
+    selectPaymentMethod('bank-transfer');
+  });
+
+  paypalLink?.addEventListener('click', () => {
+    selectPaymentMethod('paypal');
+  });
+
+  paystackLink?.addEventListener('click', () => {
+    selectPaymentMethod('paystack');
+  });
+
+  flutterwaveLink?.addEventListener('click', () => {
+    selectPaymentMethod('flutterwave');
   });
 
   if (appForm) {
     appForm.addEventListener('submit', async (event) => {
       event.preventDefault();
-      // Submission is handled via payment method buttons in step 4.
+      setAppError('');
+
+      if (!validateStep1() || !validateStep2()) {
+        return;
+      }
+
+      if (!confirmApplicationInput?.checked) {
+        setAppError('Please select the confirmation checkbox before submitting.');
+        setStep(3);
+        confirmApplicationInput?.focus();
+        return;
+      }
+
+      const selectedMethod = selectedPaymentMethodInput?.value || '';
+      if (!selectedMethod) {
+        setAppError('Please select a payment method in Step 4 before submitting.');
+        setStep(4);
+        return;
+      }
+
+      if (selectedMethod === 'bank-transfer' && (!paymentProofInput || !paymentProofInput.files || paymentProofInput.files.length === 0)) {
+        setAppError('Please upload your payment screenshot before submitting.');
+        setStep(4);
+        paymentProofInput?.focus();
+        return;
+      }
+
+      appForm.submit();
     });
   }
 

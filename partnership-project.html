@@ -311,6 +311,7 @@
       </div>
       <form name="partnership-application" method="POST" data-netlify="true" class="application-form" data-application-form data-checkout-endpoint="/api/create-checkout">
         <input type="hidden" name="form-name" value="partnership-application">
+        <input type="hidden" name="selectedPaymentMethod" data-selected-payment-method value="">
         <p class="wizard-error" data-app-error aria-live="polite"></p>
         <section class="application-step-panel is-active" data-app-step-panel="1">
           <h3 class="application-step-title">Step 1: Personal Details</h3>
@@ -444,12 +445,18 @@
             <a class="btn btn-primary" href="#" target="_blank" rel="noopener" data-flutterwave-link>Flutterwave</a>
           </div>
           <div class="bank-transfer-details" data-bank-transfer-details hidden>
+            <p>Send the sum of <strong data-payment-amount>₦0</strong> to the account details below and our team would get in touch with you.</p>
             <p><strong>Account Name:</strong> Greater One Agro Ltd</p>
             <p><strong>Account Number:</strong> 6579306489</p>
             <p><strong>Bank:</strong> Monie Point</p>
+            <div class="form-field" style="margin-top:0.5rem;">
+              <label for="paymentProofInput">Upload payment screenshot <span class="required-star">*</span></label>
+              <input id="paymentProofInput" type="file" name="paymentProof" data-payment-proof-input accept="image/*,.pdf">
+            </div>
           </div>
           <div class="form-actions">
             <button class="btn btn-call" type="button" data-app-back="3">Back</button>
+            <button class="btn btn-green" type="submit">Submit</button>
           </div>
         </section>
 
