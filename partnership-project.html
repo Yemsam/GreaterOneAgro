@@ -304,13 +304,15 @@
       <h2 id="applicationTitle">Apply for a Minimum 1-Acre Partnership</h2>
       <p>Complete your details in steps, review your summary, then continue to payment.</p>
       <div class="application-steps" role="tablist" aria-label="Application steps">
-        <button type="button" class="application-step is-active" data-app-step-trigger="1" aria-current="step">1. Personal Details</button>
-        <button type="button" class="application-step" data-app-step-trigger="2">2. Investment</button>
-        <button type="button" class="application-step" data-app-step-trigger="3">3. Summary</button>
+        <div class="application-step is-active" data-app-step-trigger="1" aria-current="step">1. Personal Details</div>
+        <div class="application-step" data-app-step-trigger="2">2. Investment</div>
+        <div class="application-step" data-app-step-trigger="3">3. Summary</div>
       </div>
       <form name="partnership-application" method="POST" data-netlify="true" class="application-form" data-application-form data-checkout-endpoint="/api/create-checkout">
         <input type="hidden" name="form-name" value="partnership-application">
+        <p class="wizard-error" data-app-error aria-live="polite"></p>
         <section class="application-step-panel is-active" data-app-step-panel="1">
+          <h3 class="application-step-title">Step 1: Personal Details</h3>
           <div class="application-grid">
             <input type="text" name="fullName" placeholder="Full Name" required>
             <input type="tel" name="phone" placeholder="Phone Number" required>
@@ -326,6 +328,7 @@
         </section>
 
         <section class="application-step-panel" data-app-step-panel="2" hidden>
+          <h3 class="application-step-title">Step 2: Investment Details</h3>
           <div class="application-grid">
             <select name="investmentType" required>
               <option value="" selected disabled>Select Investment Type</option>
@@ -360,6 +363,7 @@
         </section>
 
         <section class="application-step-panel" data-app-step-panel="3" hidden>
+          <h3 class="application-step-title">Step 3: Summary</h3>
           <div class="application-summary" data-application-summary></div>
           <div class="form-actions">
             <button class="btn btn-call" type="button" data-app-back="2">Back</button>

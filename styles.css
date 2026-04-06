@@ -1072,7 +1072,7 @@ textarea {
   padding: 0.7rem 0.6rem;
   font-weight: 700;
   font-size: 0.9rem;
-  cursor: pointer;
+  text-align: center;
 }
 
 .application-step.is-active {
@@ -1083,6 +1083,19 @@ textarea {
 
 .application-step-panel {
   margin-top: 0.75rem;
+}
+
+.application-step-title {
+  margin: 0 0 0.7rem;
+  color: var(--green);
+  font-size: 1.2rem;
+}
+
+.wizard-error {
+  margin: 0.65rem 0 0;
+  color: #9e2a2a;
+  font-weight: 700;
+  min-height: 1.25rem;
 }
 
 .application-grid {

@@ -266,6 +266,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const customAcreInput = appForm?.querySelector('[data-custom-acre-input]');
   const summaryContainer = appForm?.querySelector('[data-application-summary]');
   const estimatedAmount = appForm?.querySelector('[data-estimated-amount]');
+  const appError = appForm?.querySelector('[data-app-error]');
+
+  const setAppError = (message = '') => {
+    if (appError) {
+      appError.textContent = message;
+    }
+  };
 
   const formatCurrency = (amount) =>
     `₦${Number(amount || 0).toLocaleString('en-NG', { maximumFractionDigits: 2 })}`;
@@ -293,6 +300,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const setStep = (step) => {
+    setAppError('');
+
     appStepPanels.forEach((panel) => {
       const isActive = panel.getAttribute('data-app-step-panel') === String(step);
       panel.hidden = !isActive;
@@ -324,7 +333,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     for (const fieldName of stepOneFields) {
       const field = appForm.querySelector(`[name="${fieldName}"]`);
       if (field && !field.value.trim()) {
-        field.reportValidity();
+        setAppError('Please complete all personal and next-of-kin fields before continuing.');
         field.focus();
         return false;
       }
@@ -339,13 +348,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (!investmentTypeSelect.value) {
-      investmentTypeSelect.reportValidity();
+      setAppError('Please select an investment type before continuing.');
       investmentTypeSelect.focus();
       return false;
     }
 
     if (!acreSelect.value) {
-      acreSelect.reportValidity();
+      setAppError('Please select your acreage before continuing.');
       acreSelect.focus();
       return false;
     }
@@ -355,7 +364,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (!/^\d+(\.\d+)?$/.test(customValue)) {
         customAcreInput?.setCustomValidity('Enter a valid number using digits and optional decimal point.');
-        customAcreInput?.reportValidity();
+        setAppError('Custom acreage accepts numbers only (with optional decimal point).');
         customAcreInput?.focus();
         return false;
       }
@@ -363,7 +372,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const customNumber = Number(customValue);
       if (customNumber <= 3) {
         customAcreInput?.setCustomValidity('Custom acreage must be greater than 3.');
-        customAcreInput?.reportValidity();
+        setAppError('Custom acreage must be greater than 3.');
         customAcreInput?.focus();
         return false;
       }
@@ -408,6 +417,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     appModal.hidden = true;
     document.body.style.overflow = '';
+    setAppError('');
     setStep(1);
     if (paymentOptions) {
       paymentOptions.hidden = true;
@@ -451,6 +461,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (acreSelect) {
     acreSelect.addEventListener('change', () => {
+      setAppError('');
       const showCustom = acreSelect.value === 'others';
       if (customAcreWrap) {
         customAcreWrap.hidden = !showCustom;
@@ -467,6 +478,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (customAcreInput) {
     customAcreInput.addEventListener('input', () => {
+      setAppError('');
       const sanitized = customAcreInput.value
         .replace(/[^0-9.]/g, '')
         .replace(/(\..*)\./g, '$1');
@@ -479,6 +491,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   appNextButtons.forEach((button) => {
     button.addEventListener('click', () => {
+      setAppError('');
       const targetStep = Number(button.getAttribute('data-app-next'));
 
       if (targetStep === 2 && !validateStep1()) {
@@ -498,12 +511,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   appBackButtons.forEach((button) => {
     button.addEventListener('click', () => {
+      setAppError('');
       const targetStep = Number(button.getAttribute('data-app-back'));
       setStep(targetStep);
     });
   });
 
   makePaymentButton?.addEventListener('click', () => {
+    setAppError('');
     if (!validateStep1() || !validateStep2()) {
       return;
     }
@@ -530,19 +545,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (appForm) {
     appForm.addEventListener('submit', async (event) => {
       event.preventDefault();
+      setAppError('');
 
       if (!validateStep1() || !validateStep2()) {
         return;
       }
 
       if (paymentMethodSelect && !paymentMethodSelect.value) {
-        paymentMethodSelect.reportValidity();
+        setAppError('Please select a payment method to continue.');
         paymentMethodSelect.focus();
         return;
       }
 
       if (confirmApplicationInput && !confirmApplicationInput.checked) {
-        confirmApplicationInput.reportValidity();
+        setAppError('Please confirm your details before completing payment.');
         confirmApplicationInput.focus();
         return;
       }
