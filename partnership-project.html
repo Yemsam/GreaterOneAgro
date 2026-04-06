@@ -335,37 +335,44 @@
               <label for="addressInput">Residential Address</label>
               <input id="addressInput" type="text" name="address" placeholder="Residential Address">
             </div>
-            <div class="form-field">
-              <label for="nextOfKinNameInput">Next of Kin Name (Optional)</label>
-              <input id="nextOfKinNameInput" type="text" name="nextOfKinName" placeholder="Next of Kin Name">
-            </div>
-            <div class="form-field">
-              <label for="nextOfKinPhoneInput">Next of Kin Phone Number (with country code) (Optional)</label>
-              <input id="nextOfKinPhoneInput" type="tel" name="nextOfKinPhone" placeholder="e.g. +2348012345678" pattern="^\+[1-9]\d{7,14}$">
-            </div>
-            <div class="form-field">
-              <label for="nextOfKinRelationshipSelect">Relationship with Next of Kin (Optional)</label>
-              <select id="nextOfKinRelationshipSelect" name="nextOfKinRelationship" data-relationship-select>
-                <option value="" selected disabled>Select Relationship</option>
-                <option value="Father">Father</option>
-                <option value="Mother">Mother</option>
-                <option value="Brother">Brother</option>
-                <option value="Sister">Sister</option>
-                <option value="Aunt">Aunt</option>
-                <option value="Niece">Niece</option>
-                <option value="Uncle">Uncle</option>
-                <option value="Wife">Wife</option>
-                <option value="Husband">Husband</option>
-                <option value="Nephew">Nephew</option>
-                <option value="Friend">Friend</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div class="form-field relationship-other-wrap" data-relationship-other-wrap hidden>
-              <label for="nextOfKinRelationshipOtherInput">Please specify relationship</label>
-              <input id="nextOfKinRelationshipOtherInput" type="text" name="nextOfKinRelationshipOther" data-relationship-other-input placeholder="Type relationship">
+          </div>
+
+          <div class="next-of-kin-section">
+            <h4>Next of Kin Details (Optional)</h4>
+            <div class="application-grid">
+              <div class="form-field">
+                <label for="nextOfKinNameInput">Next of Kin Name</label>
+                <input id="nextOfKinNameInput" type="text" name="nextOfKinName" placeholder="Next of Kin Name">
+              </div>
+              <div class="form-field">
+                <label for="nextOfKinPhoneInput">Next of Kin Phone Number (with country code)</label>
+                <input id="nextOfKinPhoneInput" type="tel" name="nextOfKinPhone" placeholder="e.g. +2348012345678" pattern="^\+[1-9]\d{7,14}$">
+              </div>
+              <div class="form-field">
+                <label for="nextOfKinRelationshipSelect">Relationship with Next of Kin</label>
+                <select id="nextOfKinRelationshipSelect" name="nextOfKinRelationship" data-relationship-select>
+                  <option value="" selected disabled>Select Relationship</option>
+                  <option value="Father">Father</option>
+                  <option value="Mother">Mother</option>
+                  <option value="Brother">Brother</option>
+                  <option value="Sister">Sister</option>
+                  <option value="Aunt">Aunt</option>
+                  <option value="Niece">Niece</option>
+                  <option value="Uncle">Uncle</option>
+                  <option value="Wife">Wife</option>
+                  <option value="Husband">Husband</option>
+                  <option value="Nephew">Nephew</option>
+                  <option value="Friend">Friend</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-field relationship-other-wrap" data-relationship-other-wrap hidden>
+                <label for="nextOfKinRelationshipOtherInput">Please specify relationship</label>
+                <input id="nextOfKinRelationshipOtherInput" type="text" name="nextOfKinRelationshipOther" data-relationship-other-input placeholder="Type relationship">
+              </div>
             </div>
           </div>
+
           <div class="form-actions">
             <button class="btn btn-primary" type="button" data-app-next="2">Continue</button>
           </div>

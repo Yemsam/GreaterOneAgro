@@ -1124,6 +1124,20 @@ textarea {
   grid-column: 1 / -1;
 }
 
+.next-of-kin-section {
+  margin-top: 0.9rem;
+  padding: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #f9fcf6;
+}
+
+.next-of-kin-section h4 {
+  margin: 0 0 0.75rem;
+  color: var(--green);
+  font-size: 1rem;
+}
+
 .custom-acre-wrap {
   grid-column: 1 / -1;
 }

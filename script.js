@@ -575,7 +575,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       if (targetStep === 4) {
-        if (!confirmApplicationInput?.checked) {
+        if (!confirmApplicationInput || !confirmApplicationInput.checked) {
           setAppError('Please select the confirmation checkbox before proceeding to payment.');
           confirmApplicationInput?.focus();
           return;
@@ -596,7 +596,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   bankTransferToggle?.addEventListener('click', () => {
     if (bankTransferDetails) {
-      bankTransferDetails.hidden = !bankTransferDetails.hidden;
+      bankTransferDetails.hidden = false;
     }
   });
 
