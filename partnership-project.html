@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Join Greater One Agro's 5-Year Okra and Plantain Partnership Project with 1-acre slots starting at ₦710,600.">
-  <meta name="keywords" content="okra and plantain partnership, 1 acre farm investment, Nigerian agribusiness project">
+  <meta name="description" content="Join Greater One Agro's 5-Year Okra and Plantain Partnership Project with a minimum 1-acre investment starting at ₦710,600, with the option to acquire more acres.">
+  <meta name="keywords" content="okra and plantain partnership, 1 acre minimum, multiple acres, Nigerian agribusiness project">
   <title>Our Partnership Project | Greater One Agro Ltd</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -53,11 +53,11 @@
       <div class="panel card reveal partnership-intro">
         <p class="partnership-kicker">5-Year Flagship Offer</p>
         <h1 class="section-title">Our 5-Year Okra and Plantain Partnership Project</h1>
-        <p>Build long-term agricultural value with one clearly structured slot. Okra drives faster first-cycle returns, while Plantain supports consistent income from years 2 to 5.</p>
+        <p>Build long-term agricultural value starting from a minimum of 1 acre, with the option to acquire more acres. Okra drives faster first-cycle returns, while Plantain supports consistent income from years 2 to 5.</p>
         <div class="project-highlights">
           <article class="project-highlight">
-            <h3>1 Acre</h3>
-            <p>Minimum investment slot</p>
+            <h3>1 Acre Minimum</h3>
+            <p>Starting acreage, with room to scale up</p>
           </article>
           <article class="project-highlight">
             <h3>5 Years</h3>
@@ -73,7 +73,7 @@
       <div class="panel card reveal pricing-card">
         <p class="pricing-label">Regular Package</p>
         <h2>₦710,600</h2>
-        <p class="pricing-note">Total startup cost for one 1-acre slot</p>
+        <p class="pricing-note">Total startup cost for the minimum 1-acre slot</p>
         <p class="pricing-return">Projected return: <strong>₦6,000,000+</strong> over the full cycle.</p>
         <button class="btn btn-primary apply-btn" type="button" data-open-application>Apply Now</button>
         <p class="pricing-footnote">Click Apply Now to complete your application form and payment details.</p>
@@ -86,7 +86,7 @@
       <article class="panel card reveal">
         <h3>Regular Package Details</h3>
         <ul class="list-check">
-          <li>Minimum investment slot is 1 acre with total startup cost of ₦710,600.</li>
+          <li>The minimum investment starts at 1 acre with a total startup cost of ₦710,600, and you can acquire additional acres.</li>
           <li>Okra supports quick first-year returns.</li>
           <li>Plantain supports continuous harvest income in years 2 to 5.</li>
           <li>Partnership duration is 5 years.</li>
@@ -96,7 +96,7 @@
       <article class="panel card reveal">
         <h3>Full Benefits</h3>
         <ul class="list-check">
-          <li>1 Acre Allocated to You</li>
+          <li>1 Acre Minimum Allocated to You</li>
           <li>We Farm, You Earn</li>
           <li>100% Tax-Free (Govt. Approved)</li>
           <li>Duration: 5 Years</li>
@@ -214,7 +214,7 @@
           <input type="text" name="name" placeholder="Name" required>
           <input type="tel" name="phone" placeholder="Phone" required>
           <input type="email" name="email" placeholder="Email" required>
-          <label class="checkbox-row"><input type="checkbox" name="invest1acre"> I want to invest in 1 acre</label>
+          <label class="checkbox-row"><input type="checkbox" name="invest1acre"> I want to invest in at least 1 acre</label>
           <textarea name="message" placeholder="Message"></textarea>
           <div class="form-actions">
             <button class="btn btn-green" type="submit">Submit Enquiry</button>
@@ -230,7 +230,7 @@
           </details>
           <details class="faq-item">
             <summary>What is the minimum investment?</summary>
-            <div class="faq-answer">The minimum slot is 1 acre, with a total startup cost of ₦710,600 under the Regular Package.</div>
+            <div class="faq-answer">The minimum slot is 1 acre, with a total startup cost of ₦710,600 under the Regular Package. You can also acquire more than one acre if you want to scale up.</div>
           </details>
           <details class="faq-item">
             <summary>When do I start earning?</summary>
@@ -301,7 +301,7 @@
   <div class="application-modal" data-application-modal hidden>
     <div class="application-dialog panel" role="dialog" aria-modal="true" aria-labelledby="applicationTitle">
       <button type="button" class="application-close" data-close-application aria-label="Close application form">×</button>
-      <h2 id="applicationTitle">Apply for 1-Acre Partnership Slot</h2>
+      <h2 id="applicationTitle">Apply for a Minimum 1-Acre Partnership</h2>
       <p>Complete your details, choose payment method, and submit to finalize your application.</p>
       <form name="partnership-application" method="POST" data-netlify="true" class="application-form" data-application-form data-checkout-endpoint="/api/create-checkout">
         <input type="hidden" name="form-name" value="partnership-application">
@@ -312,7 +312,7 @@
           <input type="text" name="address" placeholder="Residential Address" required>
           <select name="slots" required>
             <option value="" selected disabled>Select Number of Slots</option>
-            <option value="1">1 Slot (₦710,600)</option>
+            <option value="1">1 Acre Minimum (₦710,600)</option>
             <option value="2">2 Slots (₦1,421,200)</option>
             <option value="3">3 Slots (₦2,131,800)</option>
           </select>
