@@ -307,6 +307,7 @@
         <div class="application-step is-active" data-app-step-trigger="1" aria-current="step">1. Personal Details</div>
         <div class="application-step" data-app-step-trigger="2">2. Investment</div>
         <div class="application-step" data-app-step-trigger="3">3. Summary</div>
+        <div class="application-step" data-app-step-trigger="4">4. Payment</div>
       </div>
       <form name="partnership-application" method="POST" data-netlify="true" class="application-form" data-application-form data-checkout-endpoint="/api/create-checkout">
         <input type="hidden" name="form-name" value="partnership-application">
@@ -315,36 +316,36 @@
           <h3 class="application-step-title">Step 1: Personal Details</h3>
           <div class="application-grid">
             <div class="form-field">
-              <label for="fullNameInput">Full Name <span class="required-star">*</span></label>
-              <input id="fullNameInput" type="text" name="fullName" placeholder="Full Name" required>
+              <label for="fullNameInput">Full Name</label>
+              <input id="fullNameInput" type="text" name="fullName" placeholder="Full Name">
             </div>
             <div class="form-field">
-              <label for="phoneInput">Phone Number (with country code) <span class="required-star">*</span></label>
-              <input id="phoneInput" type="tel" name="phone" placeholder="e.g. +2347050903309" pattern="^\+[1-9]\d{7,14}$" required>
+              <label for="phoneInput">Phone Number (with country code)</label>
+              <input id="phoneInput" type="tel" name="phone" placeholder="e.g. +2347050903309" pattern="^\+[1-9]\d{7,14}$">
             </div>
             <div class="form-field">
-              <label for="emailInput">Email Address <span class="required-star">*</span></label>
-              <input id="emailInput" type="email" name="email" placeholder="Email Address" required>
+              <label for="emailInput">Email Address</label>
+              <input id="emailInput" type="email" name="email" placeholder="Email Address">
             </div>
             <div class="form-field">
-              <label for="occupationInput">Occupation <span class="required-star">*</span></label>
-              <input id="occupationInput" type="text" name="occupation" placeholder="Occupation" required>
+              <label for="occupationInput">Occupation</label>
+              <input id="occupationInput" type="text" name="occupation" placeholder="Occupation">
             </div>
             <div class="form-field">
-              <label for="addressInput">Residential Address <span class="required-star">*</span></label>
-              <input id="addressInput" type="text" name="address" placeholder="Residential Address" required>
+              <label for="addressInput">Residential Address</label>
+              <input id="addressInput" type="text" name="address" placeholder="Residential Address">
             </div>
             <div class="form-field">
-              <label for="nextOfKinNameInput">Next of Kin Name <span class="required-star">*</span></label>
-              <input id="nextOfKinNameInput" type="text" name="nextOfKinName" placeholder="Next of Kin Name" required>
+              <label for="nextOfKinNameInput">Next of Kin Name (Optional)</label>
+              <input id="nextOfKinNameInput" type="text" name="nextOfKinName" placeholder="Next of Kin Name">
             </div>
             <div class="form-field">
-              <label for="nextOfKinPhoneInput">Next of Kin Phone Number (with country code) <span class="required-star">*</span></label>
-              <input id="nextOfKinPhoneInput" type="tel" name="nextOfKinPhone" placeholder="e.g. +2348012345678" pattern="^\+[1-9]\d{7,14}$" required>
+              <label for="nextOfKinPhoneInput">Next of Kin Phone Number (with country code) (Optional)</label>
+              <input id="nextOfKinPhoneInput" type="tel" name="nextOfKinPhone" placeholder="e.g. +2348012345678" pattern="^\+[1-9]\d{7,14}$">
             </div>
             <div class="form-field">
-              <label for="nextOfKinRelationshipSelect">Relationship with Next of Kin <span class="required-star">*</span></label>
-              <select id="nextOfKinRelationshipSelect" name="nextOfKinRelationship" data-relationship-select required>
+              <label for="nextOfKinRelationshipSelect">Relationship with Next of Kin (Optional)</label>
+              <select id="nextOfKinRelationshipSelect" name="nextOfKinRelationship" data-relationship-select>
                 <option value="" selected disabled>Select Relationship</option>
                 <option value="Father">Father</option>
                 <option value="Mother">Mother</option>
@@ -361,7 +362,7 @@
               </select>
             </div>
             <div class="form-field relationship-other-wrap" data-relationship-other-wrap hidden>
-              <label for="nextOfKinRelationshipOtherInput">Please specify relationship <span class="required-star">*</span></label>
+              <label for="nextOfKinRelationshipOtherInput">Please specify relationship</label>
               <input id="nextOfKinRelationshipOtherInput" type="text" name="nextOfKinRelationshipOther" data-relationship-other-input placeholder="Type relationship">
             </div>
           </div>
@@ -416,22 +417,32 @@
         <section class="application-step-panel" data-app-step-panel="3" hidden>
           <h3 class="application-step-title">Step 3: Summary</h3>
           <div class="application-summary" data-application-summary></div>
-          <div class="payment-options">
-            <label for="paymentMethodSelect">Payment Method <span class="required-star">*</span></label>
-            <select id="paymentMethodSelect" name="paymentMethod" required>
-              <option value="" selected disabled>Select Payment Method</option>
-              <option value="card">Card Payment</option>
-              <option value="bank-transfer">Bank Transfer</option>
-              <option value="paypal">PayPal</option>
-            </select>
-            <label class="checkbox-row">
-              <input type="checkbox" name="confirmApplication" required>
-              I confirm that the information provided is correct and I am ready to proceed with payment. <span class="required-star">*</span>
-            </label>
-          </div>
+          <label class="checkbox-row">
+            <input type="checkbox" name="confirmApplication" data-confirm-application required>
+            I confirm that the information provided is correct and I am ready to proceed with payment. <span class="required-star">*</span>
+          </label>
           <div class="form-actions">
             <button class="btn btn-call" type="button" data-app-back="2">Back</button>
-            <button class="btn btn-green" type="submit">Complete Application and Payment</button>
+            <button class="btn btn-green" type="button" data-app-next="4">Proceed to Payment</button>
+          </div>
+        </section>
+
+        <section class="application-step-panel" data-app-step-panel="4" hidden>
+          <h3 class="application-step-title">Step 4: Payment Methods</h3>
+          <p>Select your preferred payment option below.</p>
+          <div class="payment-options payment-buttons">
+            <button class="btn btn-primary" type="button" data-bank-transfer-toggle>Bank Transfer</button>
+            <a class="btn btn-primary" href="#" target="_blank" rel="noopener" data-paypal-link>PayPal</a>
+            <a class="btn btn-primary" href="#" target="_blank" rel="noopener" data-paystack-link>Paystack</a>
+            <a class="btn btn-primary" href="#" target="_blank" rel="noopener" data-flutterwave-link>Flutterwave</a>
+          </div>
+          <div class="bank-transfer-details" data-bank-transfer-details hidden>
+            <p><strong>Account Name:</strong> Greater One Agro Ltd</p>
+            <p><strong>Account Number:</strong> 6579306489</p>
+            <p><strong>Bank:</strong> Monie Point</p>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-call" type="button" data-app-back="3">Back</button>
           </div>
         </section>
 

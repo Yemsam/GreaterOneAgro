@@ -255,9 +255,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const appStepPanels = Array.from(document.querySelectorAll('[data-app-step-panel]'));
   const appNextButtons = Array.from(document.querySelectorAll('[data-app-next]'));
   const appBackButtons = Array.from(document.querySelectorAll('[data-app-back]'));
-  const paymentMethodSelect = appForm?.querySelector('select[name="paymentMethod"]');
-  const confirmApplicationInput = appForm?.querySelector('input[name="confirmApplication"]');
-  const finalSubmitButton = appForm?.querySelector('button[type="submit"]');
+  const confirmApplicationInput = appForm?.querySelector('[data-confirm-application]');
   const investmentTypeSelect = appForm?.querySelector('select[name="investmentType"]');
   const acreSelect = appForm?.querySelector('[data-acre-select]');
   const customAcreWrap = appForm?.querySelector('[data-custom-acre-wrap]');
@@ -265,6 +263,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const relationshipSelect = appForm?.querySelector('[data-relationship-select]');
   const relationshipOtherWrap = appForm?.querySelector('[data-relationship-other-wrap]');
   const relationshipOtherInput = appForm?.querySelector('[data-relationship-other-input]');
+  const bankTransferToggle = appForm?.querySelector('[data-bank-transfer-toggle]');
+  const bankTransferDetails = appForm?.querySelector('[data-bank-transfer-details]');
   const summaryContainer = appForm?.querySelector('[data-application-summary]');
   const estimatedAmount = appForm?.querySelector('[data-estimated-amount]');
   const appError = appForm?.querySelector('[data-app-error]');
@@ -339,53 +339,28 @@ document.addEventListener('DOMContentLoaded', async () => {
       return false;
     }
 
-    const stepOneFields = [
-      'fullName',
-      'phone',
-      'email',
-      'occupation',
-      'address',
-      'nextOfKinName',
-      'nextOfKinPhone'
-    ];
-
-    for (const fieldName of stepOneFields) {
-      const field = appForm.querySelector(`[name="${fieldName}"]`);
-      if (field && !field.value.trim()) {
-        setAppError('Please complete all personal and next-of-kin fields before continuing.');
-        field.focus();
-        return false;
-      }
-    }
-
     const emailField = appForm.querySelector('[name="email"]');
-    if (emailField && !isValidEmail(emailField.value.trim())) {
+    if (emailField && emailField.value.trim() && !isValidEmail(emailField.value.trim())) {
       setAppError('Please enter a valid email address (example: name@example.com).');
       emailField.focus();
       return false;
     }
 
     const phoneField = appForm.querySelector('[name="phone"]');
-    if (phoneField && !isValidPhoneWithCountryCode(phoneField.value.trim())) {
+    if (phoneField && phoneField.value.trim() && !isValidPhoneWithCountryCode(phoneField.value.trim())) {
       setAppError('Phone number must include country code, e.g. +2347050903309.');
       phoneField.focus();
       return false;
     }
 
     const kinPhoneField = appForm.querySelector('[name="nextOfKinPhone"]');
-    if (kinPhoneField && !isValidPhoneWithCountryCode(kinPhoneField.value.trim())) {
+    if (kinPhoneField && kinPhoneField.value.trim() && !isValidPhoneWithCountryCode(kinPhoneField.value.trim())) {
       setAppError('Next of kin phone must include country code, e.g. +2348012345678.');
       kinPhoneField.focus();
       return false;
     }
 
-    if (!relationshipSelect || !relationshipSelect.value) {
-      setAppError('Please select your relationship with next of kin.');
-      relationshipSelect?.focus();
-      return false;
-    }
-
-    if (relationshipSelect.value === 'Other') {
+    if (relationshipSelect?.value === 'Other') {
       const customRelationship = String(relationshipOtherInput?.value || '').trim();
 
       if (!customRelationship) {
@@ -399,6 +374,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         relationshipOtherInput?.focus();
         return false;
       }
+    }
+
+    if (relationshipOtherInput && relationshipOtherInput.value.trim() && !isValidRelationshipText(relationshipOtherInput.value.trim())) {
+      setAppError('Relationship must contain letters only (numbers and symbols are not allowed).');
+      relationshipOtherInput.focus();
+      return false;
     }
 
     return true;
@@ -459,19 +440,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
       .join(' ');
 
-    summaryContainer.innerHTML = `
-      <p><strong>Full Name:</strong> ${String(formData.get('fullName') || '')}</p>
-      <p><strong>Phone:</strong> ${String(formData.get('phone') || '')}</p>
-      <p><strong>Email:</strong> ${String(formData.get('email') || '')}</p>
-      <p><strong>Occupation:</strong> ${String(formData.get('occupation') || '')}</p>
-      <p><strong>Address:</strong> ${String(formData.get('address') || '')}</p>
-      <p><strong>Next of Kin:</strong> ${String(formData.get('nextOfKinName') || '')}</p>
-      <p><strong>Next of Kin Phone:</strong> ${String(formData.get('nextOfKinPhone') || '')}</p>
-      <p><strong>Relationship:</strong> ${relationship}</p>
-      <p><strong>Investment Type:</strong> ${investmentType}</p>
-      <p><strong>Total Acres:</strong> ${acres}</p>
-      <p><strong>Estimated Amount:</strong> ${formatCurrency(amount)}</p>
-    `;
+    const summaryRows = [
+      ['Full Name', String(formData.get('fullName') || '').trim()],
+      ['Phone', String(formData.get('phone') || '').trim()],
+      ['Email', String(formData.get('email') || '').trim()],
+      ['Occupation', String(formData.get('occupation') || '').trim()],
+      ['Address', String(formData.get('address') || '').trim()],
+      ['Next of Kin', String(formData.get('nextOfKinName') || '').trim()],
+      ['Next of Kin Phone', String(formData.get('nextOfKinPhone') || '').trim()],
+      ['Relationship', relationship],
+      ['Investment Type', investmentType],
+      ['Total Acres', acres > 0 ? String(acres) : ''],
+      ['Estimated Amount', amount > 0 ? formatCurrency(amount) : '']
+    ].filter(([, value]) => value);
+
+    summaryContainer.innerHTML = summaryRows.length
+      ? summaryRows.map(([label, value]) => `<p><strong>${label}:</strong> ${value}</p>`).join('')
+      : '<p>No details entered yet.</p>';
   };
 
   const closeApplicationModal = () => {
@@ -484,20 +469,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     setAppError('');
     setStep(1);
     appForm?.reset();
-    if (paymentMethodSelect) {
-      paymentMethodSelect.value = '';
-    }
     if (confirmApplicationInput) {
       confirmApplicationInput.checked = false;
     }
     if (relationshipOtherWrap) {
       relationshipOtherWrap.hidden = true;
     }
-    if (finalSubmitButton) {
-      finalSubmitButton.textContent = 'Complete Application and Payment';
-    }
     if (customAcreWrap) {
       customAcreWrap.hidden = true;
+    }
+    if (bankTransferDetails) {
+      bankTransferDetails.hidden = true;
     }
     updateEstimatedAmount();
   };
@@ -592,6 +574,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderSummary();
       }
 
+      if (targetStep === 4) {
+        if (!confirmApplicationInput?.checked) {
+          setAppError('Please select the confirmation checkbox before proceeding to payment.');
+          confirmApplicationInput?.focus();
+          return;
+        }
+      }
+
       setStep(targetStep);
     });
   });
@@ -604,78 +594,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
+  bankTransferToggle?.addEventListener('click', () => {
+    if (bankTransferDetails) {
+      bankTransferDetails.hidden = !bankTransferDetails.hidden;
+    }
+  });
+
   if (appForm) {
     appForm.addEventListener('submit', async (event) => {
       event.preventDefault();
-      setAppError('');
-
-      if (!validateStep1() || !validateStep2()) {
-        return;
-      }
-
-      if (paymentMethodSelect && !paymentMethodSelect.value) {
-        setAppError('Please select a payment method to continue.');
-        paymentMethodSelect.focus();
-        return;
-      }
-
-      if (confirmApplicationInput && !confirmApplicationInput.checked) {
-        setAppError('Please confirm your details before completing payment.');
-        confirmApplicationInput.focus();
-        return;
-      }
-
-      const submitButton = appForm.querySelector('button[type="submit"]');
-      const originalButtonText = submitButton?.textContent || '';
-      const formData = new FormData(appForm);
-      const acres = getSelectedAcreage();
-      const amountInNaira = acres * 710600;
-      const endpoint = appForm.getAttribute('data-checkout-endpoint') || '/api/create-checkout';
-      const payload = {
-        amountInNaira,
-        email: String(formData.get('email') || ''),
-        fullName: String(formData.get('fullName') || ''),
-        occupation: String(formData.get('occupation') || ''),
-        phone: String(formData.get('phone') || ''),
-        slots: String(acres || ''),
-        acres: String(acres || ''),
-        investmentType: String(formData.get('investmentType') || ''),
-        nextOfKinName: String(formData.get('nextOfKinName') || ''),
-        nextOfKinPhone: String(formData.get('nextOfKinPhone') || ''),
-        nextOfKinRelationship: getValidatedRelationship(),
-        paymentMethod: String(formData.get('paymentMethod') || ''),
-        notes: String(formData.get('notes') || '')
-      };
-
-      if (submitButton) {
-        submitButton.disabled = true;
-        submitButton.textContent = 'Redirecting to secure checkout...';
-      }
-
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        if (!response.ok || !data.url) {
-          throw new Error(data.error || 'Unable to start secure checkout. Please try again.');
-        }
-
-        window.location.href = data.url;
-      } catch (error) {
-        window.alert(error.message || 'Unable to start secure checkout. Please try again.');
-
-        if (submitButton) {
-          submitButton.disabled = false;
-          submitButton.textContent = originalButtonText;
-        }
-      }
+      // Submission is handled via payment method buttons in step 4.
     });
   }
 

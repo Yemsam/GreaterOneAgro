@@ -1060,7 +1060,7 @@ textarea {
 .application-steps {
   margin-top: 0.85rem;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.55rem;
 }
 
@@ -1150,6 +1150,22 @@ textarea {
   margin-top: 0.8rem;
   display: grid;
   gap: 0.7rem;
+}
+
+.payment-buttons {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.bank-transfer-details {
+  margin-top: 0.9rem;
+  padding: 0.9rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #f6fbf1;
+}
+
+.bank-transfer-details p {
+  margin: 0.35rem 0;
 }
 
 .application-success {
