@@ -1,827 +1,375 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wealth Hub Tech — Premium Web Design & Development</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            navy:    { DEFAULT: '#0B1628', 700: '#0F1E38', 600: '#152447', 500: '#1B2D5E' },
-            charcoal:{ DEFAULT: '#1C1C2E', 700: '#252538', 600: '#2E2E48' },
-            gold:    { DEFAULT: '#C9A84C', light: '#E2C47A', dark: '#A07828' },
-            emerald: { DEFAULT: '#1DB87A', light: '#2DD68F', dark: '#158F5E' },
-          },
-          fontFamily: {
-            display: ['"Playfair Display"', 'Georgia', 'serif'],
-            body:    ['Inter', 'system-ui', 'sans-serif'],
-          },
-        }
-      }
-    }
-  </script>
-
-  <style>
-    /* ── Base ─────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: #0B1628;
-      color: #E8EDF5;
-      overflow-x: hidden;
-    }
-
-    /* ── CSS Variables ───────────────────────────────────── */
-    :root {
-      --navy:        #0B1628;
-      --navy-700:    #0F1E38;
-      --navy-600:    #152447;
-      --charcoal:    #1C1C2E;
-      --gold:        #C9A84C;
-      --gold-light:  #E2C47A;
-      --emerald:     #1DB87A;
-      --text-light:  #E8EDF5;
-      --text-muted:  #8899B8;
-    }
-
-    /* ── Noise Texture Overlay ───────────────────────────── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.4;
-    }
-
-    /* ── Navigation ─────────────────────────────────────── */
-    #navbar {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 1000;
-      transition: all 0.4s ease;
-    }
-    #navbar.scrolled {
-      background: rgba(11, 22, 40, 0.96);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(201, 168, 76, 0.15);
-      box-shadow: 0 4px 40px rgba(0,0,0,0.4);
-    }
-    .nav-link {
-      position: relative;
-      font-size: 0.8125rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.3s ease;
-      padding-bottom: 4px;
-    }
-    .nav-link::after {
-      content: '';
-      position: absolute; bottom: 0; left: 0;
-      width: 0; height: 1px;
-      background: var(--gold);
-      transition: width 0.3s ease;
-    }
-    .nav-link:hover, .nav-link.active { color: var(--gold-light); }
-    .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-
-    /* ── Logo mark ───────────────────────────────────────── */
-    .logo-text {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-light);
-      letter-spacing: 0.02em;
-    }
-    .logo-text span { color: var(--gold); }
-
-    /* ── Mobile Menu ─────────────────────────────────────── */
-    #mobile-menu {
-      display: none;
-      position: fixed; inset: 0;
-      z-index: 999;
-      background: rgba(11, 22, 40, 0.98);
-      backdrop-filter: blur(30px);
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2.5rem;
-    }
-    #mobile-menu.open { display: flex; }
-    .mobile-nav-link {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-decoration: none;
-      letter-spacing: 0.05em;
-      transition: color 0.3s;
-    }
-    .mobile-nav-link:hover { color: var(--gold-light); }
-
-    /* ── Hamburger ───────────────────────────────────────── */
-    .hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 5px; }
-    .hamburger span {
-      display: block; width: 24px; height: 1.5px;
-      background: var(--text-light);
-      transition: all 0.3s ease;
-    }
-    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-    /* ── Gold divider ────────────────────────────────────── */
-    .gold-line {
-      width: 48px; height: 2px;
-      background: linear-gradient(90deg, var(--gold), transparent);
-    }
-
-    /* ── Hero ────────────────────────────────────────────── */
-    .hero-bg {
-      background:
-        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(201,168,76,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 80% at 10% 80%, rgba(29,184,122,0.05) 0%, transparent 50%),
-        linear-gradient(160deg, #0B1628 0%, #0F1E38 50%, #0B1628 100%);
-    }
-
-    /* ── Grid pattern ────────────────────────────────────── */
-    .grid-pattern {
-      background-image:
-        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
-    }
-
-    /* ── Animated counter ────────────────────────────────── */
-    .metric-number {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.75rem;
-      font-weight: 700;
-      color: var(--gold-light);
-      line-height: 1;
-    }
-
-    /* ── Project card ────────────────────────────────────── */
-    .project-card {
-      background: rgba(21, 36, 71, 0.6);
-      border: 1px solid rgba(201,168,76,0.12);
-      border-radius: 4px;
-      overflow: hidden;
-      transition: all 0.4s ease;
-      position: relative;
-    }
-    .project-card::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(201,168,76,0.04), transparent);
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
-    .project-card:hover {
-      border-color: rgba(201,168,76,0.35);
-      transform: translateY(-4px);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.1);
-    }
-    .project-card:hover::before { opacity: 1; }
-
-    .card-img-wrap {
-      overflow: hidden;
-      aspect-ratio: 16/10;
-      background: var(--navy-600);
-    }
-    .card-img-wrap img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s ease;
-    }
-    .project-card:hover .card-img-wrap img { transform: scale(1.05); }
-
-    /* ── Tag pill ────────────────────────────────────────── */
-    .tag {
-      display: inline-block;
-      font-size: 0.6875rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 3px 10px;
-      border-radius: 2px;
-    }
-    .tag-gold  { background: rgba(201,168,76,0.12); color: var(--gold-light); border: 1px solid rgba(201,168,76,0.2); }
-    .tag-green { background: rgba(29,184,122,0.1);  color: #5EEAD4;           border: 1px solid rgba(29,184,122,0.2); }
-
-    /* ── CTA Button ─────────────────────────────────────── */
-    .btn-gold {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-      color: #0B1628;
-      font-size: 0.8125rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 14px 32px;
-      border-radius: 2px;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .btn-gold::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: rgba(255,255,255,0.15);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .btn-gold:hover::after { opacity: 1; }
-    .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(201,168,76,0.35); }
-
-    .btn-outline {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: transparent;
-      color: var(--gold-light);
-      font-size: 0.8125rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 13px 32px;
-      border-radius: 2px;
-      border: 1px solid rgba(201,168,76,0.4);
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-    .btn-outline:hover {
-      background: rgba(201,168,76,0.08);
-      border-color: var(--gold);
-      color: var(--gold-light);
-    }
-
-    /* ── Section headings ───────────────────────────────── */
-    .section-label {
-      font-size: 0.6875rem;
-      font-weight: 600;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 700;
-      color: var(--text-light);
-      line-height: 1.15;
-    }
-
-    /* ── Metrics strip ──────────────────────────────────── */
-    .metrics-strip {
-      background: rgba(201,168,76,0.06);
-      border-top: 1px solid rgba(201,168,76,0.15);
-      border-bottom: 1px solid rgba(201,168,76,0.15);
-    }
-    .metric-divider {
-      width: 1px; height: 60px;
-      background: rgba(201,168,76,0.15);
-    }
-
-    /* ── Scroll reveal ──────────────────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-
-    /* ── Services Icons ────────────────────────────────── */
-    .service-icon {
-      width: 48px; height: 48px;
-      border-radius: 4px;
-      background: rgba(201,168,76,0.1);
-      border: 1px solid rgba(201,168,76,0.2);
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    /* ── Testimonial ────────────────────────────────────── */
-    .quote-mark {
-      font-family: 'Playfair Display', serif;
-      font-size: 6rem;
-      line-height: 0.6;
-      color: rgba(201,168,76,0.15);
-    }
-
-    /* ── Footer ─────────────────────────────────────────── */
-    .footer-link {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .footer-link:hover { color: var(--gold-light); }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Greater One Agro Ltd offers a premium Okra, Plantain, Cocoa, and Palm Tree farming partnership in Nigeria.">
+  <meta name="keywords" content="okra farming, plantain farming, cocoa farming, palm trees, Nigeria agribusiness, Greater One Agro, partnership project">
+  <title>Greater One Agro Ltd | Diversified Agribusiness Farming Partnership</title>
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="shortcut icon" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/favicon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/favicon.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="img/favicon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-  <!-- ═══════════════════════════════════════════════════
-       NAVIGATION (global — same across all pages)
-  ═══════════════════════════════════════════════════ -->
-  <nav id="navbar" class="px-6 lg:px-12 py-5">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-
-      <!-- Logo -->
-      <a href="index.html" class="logo-text flex items-center gap-3">
-        <!-- Monogram icon -->
-        <div style="width:36px;height:36px;background:linear-gradient(135deg,#C9A84C,#E2C47A);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <span style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#0B1628;line-height:1;">W</span>
-        </div>
-        Wealth Hub <span>Tech</span>
-      </a>
-
-      <!-- Desktop nav -->
-      <div class="hidden md:flex items-center gap-10">
-        <a href="index.html"   class="nav-link active">Home</a>
-        <a href="work.html"    class="nav-link">Work</a>
-        <a href="about.html"   class="nav-link">About</a>
-        <a href="contact.html" class="nav-link">Contact</a>
-      </div>
-
-      <!-- CTA + hamburger -->
-      <div class="flex items-center gap-6">
-        <a href="contact.html" class="btn-gold hidden md:inline-flex" style="padding:10px 24px;font-size:0.75rem;">
-          Start a Project
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  <div class="top-strip">
+    <div class="container">
+      <div>Okra • Plantain • Cocoa • Palm Trees | Professional Farm Management</div>
+      <div class="footer-socials" aria-label="Greater One Agro social links">
+        <a class="footer-social-link" href="#" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.2-1.5 1.6-1.5h1.7V5c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5V11H7v3h2.8v8h3.7z"/></svg>
         </a>
-        <!-- Hamburger (mobile) -->
-        <div class="hamburger md:hidden" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
-          <span></span><span></span><span></span>
-        </div>
+        <a class="footer-social-link" href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zm5.75-3.1a1.05 1.05 0 1 1-1.05 1.05 1.05 1.05 0 0 1 1.05-1.05z"/></svg>
+        </a>
+        <a class="footer-social-link" href="#" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 2c.5 2.6 2.1 4.2 4.5 4.5v3.1c-1.5 0-2.9-.5-4.1-1.3v6.5a6.9 6.9 0 1 1-6.9-6.9c.4 0 .8 0 1.1.1v3.3c-.3-.1-.7-.2-1.1-.2a3.7 3.7 0 1 0 3.7 3.7V2h2.8z"/></svg>
+        </a>
       </div>
-
     </div>
-  </nav>
-
-  <!-- ═══════════════════════════════════════════════════
-       MOBILE MENU OVERLAY
-  ═══════════════════════════════════════════════════ -->
-  <div id="mobile-menu">
-    <!-- Close button -->
-    <button onclick="toggleMenu()" style="position:absolute;top:24px;right:28px;background:none;border:none;cursor:pointer;color:#8899B8;">
-      <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
-    </button>
-    <a href="index.html"   class="mobile-nav-link" onclick="toggleMenu()">Home</a>
-    <a href="work.html"    class="mobile-nav-link" onclick="toggleMenu()">Work</a>
-    <a href="about.html"   class="mobile-nav-link" onclick="toggleMenu()">About</a>
-    <a href="contact.html" class="mobile-nav-link" onclick="toggleMenu()">Contact</a>
-    <a href="contact.html" class="btn-gold" onclick="toggleMenu()">Start a Project</a>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════
-       HERO SECTION
-  ═══════════════════════════════════════════════════ -->
-  <section class="hero-bg grid-pattern relative min-h-screen flex items-center pt-24">
-    <!-- Decorative arc -->
-    <div style="position:absolute;right:-10%;top:10%;width:55vw;height:55vw;max-width:700px;max-height:700px;border-radius:50%;border:1px solid rgba(201,168,76,0.07);pointer-events:none;"></div>
-    <div style="position:absolute;right:-5%;top:15%;width:42vw;height:42vw;max-width:560px;max-height:560px;border-radius:50%;border:1px solid rgba(201,168,76,0.05);pointer-events:none;"></div>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="Greater One Agro Home">
+        <!-- <span class="logo-mark" aria-hidden="true"></span>
+        <span class="brand-text"><span>GREATER ONE AGRO</span><br><span>LTD</span></span> -->
+        <img class="brand-logo-img" src="img/logo.png" alt="Greater One Agro logo">
+      </a>
+      <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="farms.html">Our Farms</a></li>
+          <li><a href="partnership-project.html">Our Partnership Project</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-call" href="tel:07050903309">Call Now</a>
+    </div>
+  </header>
 
-    <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full py-20">
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
+  <section class="hero" data-hero-slider>
+    <div class="hero-media-layer" aria-hidden="true">
+      <video class="hero-video" data-hero-video muted loop playsinline autoplay preload="metadata" poster="img/home-hero-okra-plantain-farm.jpg">
+        <source src="img/home-header-loop.mp4" type="video/mp4">
+      </video>
+    </div>
 
-        <!-- Left: copy -->
-        <div>
-          <div class="flex items-center gap-3 mb-8" style="animation:fadeUp 0.8s ease both 0.1s;">
-            <div class="gold-line"></div>
-            <span class="section-label">Premium Web Design & Development</span>
+    <div class="hero-slider">
+      <article class="hero-slide is-active" data-hero-slide>
+        <img class="bg" src="img/home-hero-okra-plantain-farm.jpg" alt="Smiling farmer standing in a lush plantain and okra farm" fetchpriority="high">
+        <div class="hero-shade"></div>
+        <div class="hero-content reveal">
+          <h1>TURN ₦710,000 INTO ₦6,000,000+</h1>
+          <p>Okra and Plantain Combo Farming with structured growth over 5 years.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="partnership-project.html">Explore Partnership</a>
+            <a class="btn btn-call" href="tel:07050903309">Call Now: 07050903309</a>
           </div>
-
-          <h1 class="section-title mb-6" style="font-size:clamp(2.75rem,6vw,4rem);animation:fadeUp 0.8s ease both 0.25s;">
-            We Build Sites That<br />
-            <em style="color:var(--gold-light);font-style:italic;">Generate Wealth</em>
-          </h1>
-
-          <p style="color:var(--text-muted);font-size:1.0625rem;line-height:1.75;max-width:480px;margin-bottom:2.5rem;animation:fadeUp 0.8s ease both 0.4s;">
-            Wealth Hub Tech designs premium websites for ambitious businesses that need stronger trust, better conversion, and clearer commercial results.
-          </p>
-
-          <div class="flex flex-wrap gap-4" style="animation:fadeUp 0.8s ease both 0.55s;">
-            <a href="work.html" class="btn-gold">
-              View Our Work
-              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-            <a href="contact.html" class="btn-outline">Get a Free Audit</a>
-          </div>
-
-          <!-- Trust bar -->
-          <div class="flex items-center gap-6 mt-12" style="animation:fadeUp 0.8s ease both 0.7s;">
-            <div class="flex -space-x-2">
-              <!-- avatar stack placeholder -->
-              <div style="width:36px;height:36px;border-radius:50%;border:2px solid #0B1628;background:linear-gradient(135deg,#C9A84C,#1DB87A);"></div>
-              <div style="width:36px;height:36px;border-radius:50%;border:2px solid #0B1628;background:linear-gradient(135deg,#1B2D5E,#C9A84C);"></div>
-              <div style="width:36px;height:36px;border-radius:50%;border:2px solid #0B1628;background:linear-gradient(135deg,#1DB87A,#1B2D5E);"></div>
-              <div style="width:36px;height:36px;border-radius:50%;border:2px solid #0B1628;background:rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;font-size:0.625rem;font-weight:600;color:var(--gold-light);">+47</div>
-            </div>
-            <p style="color:var(--text-muted);font-size:0.875rem;line-height:1.4;">
-              Trusted by <strong style="color:var(--text-light);">50+ clients</strong><br/>across 8 industries
-            </p>
+          <div class="hero-badges">
+            <span class="badge hero-badge">1 Acre Minimum</span>
+            <span class="badge hero-badge">Tax-Free Structure</span>
+            <span class="badge hero-badge">Traceable and Ethical</span>
           </div>
         </div>
+      </article>
 
-        <!-- Right: feature card stack -->
-        <div class="relative hidden lg:block" style="animation:fadeUp 0.8s ease both 0.5s;">
-          <!-- Main preview card -->
-          <div class="project-card" style="border-color:rgba(201,168,76,0.25);">
-            <div class="card-img-wrap" style="aspect-ratio:4/3;background:linear-gradient(135deg,#152447,#1C1C2E);">
-              <!-- Placeholder visual -->
-              <div style="width:100%;height:100%;display:flex;flex-direction:column;padding:2rem;justify-content:space-between;background:linear-gradient(135deg,rgba(21,36,71,0.9),rgba(11,22,40,0.9));">
-                <div style="display:flex;gap:8px;">
-                  <div style="width:10px;height:10px;border-radius:50%;background:#FF6B6B;"></div>
-                  <div style="width:10px;height:10px;border-radius:50%;background:#FFE66D;"></div>
-                  <div style="width:10px;height:10px;border-radius:50%;background:#6BCB77;"></div>
-                </div>
-                <!-- Fake browser content -->
-                <div style="flex:1;display:flex;flex-direction:column;gap:12px;padding-top:1.5rem;">
-                  <div style="height:3px;background:linear-gradient(90deg,var(--gold),transparent);width:60%;border-radius:2px;"></div>
-                  <div style="height:2px;background:rgba(255,255,255,0.07);width:90%;border-radius:2px;"></div>
-                  <div style="height:2px;background:rgba(255,255,255,0.07);width:75%;border-radius:2px;"></div>
-                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-                    <div style="height:60px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.12);border-radius:3px;"></div>
-                    <div style="height:60px;background:rgba(29,184,122,0.06);border:1px solid rgba(29,184,122,0.1);border-radius:3px;"></div>
-                  </div>
-                  <div style="height:2px;background:rgba(255,255,255,0.05);width:80%;border-radius:2px;"></div>
-                  <div style="height:2px;background:rgba(255,255,255,0.05);width:65%;border-radius:2px;"></div>
-                </div>
-                <div style="display:flex;align-items:center;justify-content:space-between;">
-                  <div class="tag tag-gold">E-Commerce</div>
-                  <div style="font-size:0.7rem;color:var(--text-muted);">+320% Revenue ↑</div>
-                </div>
+      <article class="hero-slide" data-hero-slide>
+        <img class="bg" src="img/farm-okra-field.jpg" alt="Healthy okra field ready for harvest" loading="lazy">
+        <div class="hero-shade"></div>
+        <div class="hero-content reveal">
+          <h2>Fast Okra Harvest Cycles</h2>
+          <p>Enjoy quicker return windows from professionally managed okra production in year one.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="farms.html">See Our Farms</a>
+            <a class="btn btn-call" href="tel:07050903309">Speak to Our Team</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="hero-slide" data-hero-slide>
+        <img class="bg" src="img/farm-plantain-harvest.jpg" alt="Plantain bunches harvested on Greater One Agro farm" loading="lazy">
+        <div class="hero-shade"></div>
+        <div class="hero-content reveal">
+          <h2>Plantain Value from Year 2 to Year 5</h2>
+          <p>Your investment starts at 1 acre and can scale to larger acreages using the same focused crop combination.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="partnership-project.html">View 5-Year Plan</a>
+            <a class="btn btn-call" href="contact.html">Book a Consultation</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="hero-slide" data-hero-slide>
+        <img class="bg" src="img/farm-irrigation-management.jpg" alt="Modern irrigation and farm management infrastructure" loading="lazy">
+        <div class="hero-shade"></div>
+        <div class="hero-content reveal">
+          <h2>Disciplined Farm Management</h2>
+          <p>From irrigation to harvest handling, every stage is documented to keep your investment trackable.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="about.html">Learn About Us</a>
+            <a class="btn btn-call" href="tel:07050903309">Call Our Hotline</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="hero-slide" data-hero-slide>
+        <img class="bg" src="img/gallery-farm-to-table.jpg" alt="Fresh produce journey from farm to market" loading="lazy">
+        <div class="hero-shade"></div>
+        <div class="hero-content reveal">
+          <h2>Real Produce. Real Market Value.</h2>
+          <p>Join a partnership built on practical farm-to-market execution and transparent investor communication.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="gallery.html">View Gallery</a>
+            <a class="btn btn-call" href="tel:07050903309">Start With 1 Acre Minimum</a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="hero-controls" aria-label="Hero slider controls">
+      <button type="button" data-hero-prev aria-label="Previous hero slide">‹</button>
+      <div class="hero-dots" role="tablist" aria-label="Hero slides">
+        <button type="button" class="is-active" data-hero-dot aria-label="Go to slide 1"></button>
+        <button type="button" data-hero-dot aria-label="Go to slide 2"></button>
+        <button type="button" data-hero-dot aria-label="Go to slide 3"></button>
+        <button type="button" data-hero-dot aria-label="Go to slide 4"></button>
+        <button type="button" data-hero-dot aria-label="Go to slide 5"></button>
+      </div>
+      <button type="button" data-hero-next aria-label="Next hero slide">›</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container benefits">
+      <div class="benefit panel reveal">1 Acre Minimum, More Allowed</div>
+      <div class="benefit panel reveal">Okra for Quick Returns</div>
+      <div class="benefit panel reveal">Plantain for Years 2 to 5</div>
+      <div class="benefit panel reveal">100% Tax-Free</div>
+      <div class="benefit panel reveal">We Farm, You Earn</div>
+    </div>
+  </section>
+
+  <section class="section section-toned">
+    <div class="container">
+      <h2 class="section-title reveal">Investor Success Stories</h2>
+      <p class="section-subtitle reveal">What our partners are saying about the investment with Greater One Agro Ltd.</p>
+      <div class="panel testimonial-carousel reveal" data-carousel>
+        <div class="testimonial-track">
+          <article class="testimonial-slide">
+            <div class="testimonial-card">
+              <img src="img/testimonial-investor-01.jpg" alt="Mr. Adebayo Johnson" loading="lazy">
+              <div>
+                <strong>Mr. Adebayo Johnson, Lagos</strong>
+                <p class="stars">★★★★★</p>
+                <p>"My first Okra cycle gave me confidence quickly, and the Plantain section keeps building value year after year. The reporting is clean and professional."</p>
               </div>
             </div>
-            <div style="padding:1.25rem 1.5rem;">
-              <p style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--text-light);margin-bottom:4px;">WealthTrack Pro</p>
-              <p style="font-size:0.8125rem;color:var(--text-muted);">Client-facing financial platform with a polished conversion path</p>
+          </article>
+          <article class="testimonial-slide">
+            <div class="testimonial-card">
+              <img src="img/testimonial-investor-02.jpg" alt="Mrs. Funke Adewale" loading="lazy">
+              <div>
+                <strong>Mrs. Funke Adewale, Abuja</strong>
+                <p class="stars">★★★★★</p>
+                <p>"I wanted an agricultural project that was focused and realistic. Greater One Agro kept it simple with Okra and Plantain, and the returns have matched the structure they explained."</p>
+              </div>
             </div>
-          </div>
-
-          <!-- Floating metric badge -->
-          <div style="position:absolute;top:-24px;right:-24px;background:linear-gradient(135deg,#C9A84C,#E2C47A);border-radius:4px;padding:16px 20px;box-shadow:0 16px 40px rgba(201,168,76,0.3);">
-            <p style="font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;color:#0B1628;line-height:1;">98%</p>
-            <p style="font-size:0.6875rem;font-weight:600;color:rgba(11,22,40,0.7);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;">Client Retention</p>
-          </div>
-
-          <!-- Small floating card -->
-          <div style="position:absolute;bottom:-20px;left:-30px;background:rgba(21,36,71,0.95);border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:14px 18px;backdrop-filter:blur(20px);box-shadow:0 12px 40px rgba(0,0,0,0.4);">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:8px;height:8px;border-radius:50%;background:var(--emerald);box-shadow:0 0 8px var(--emerald);"></div>
-              <p style="font-size:0.8125rem;color:var(--text-light);font-weight:500;">3 sites live this month</p>
+          </article>
+          <article class="testimonial-slide">
+            <div class="testimonial-card">
+              <img src="img/testimonial-investor-03.jpg" alt="Mrs. Nkechi Okoro" loading="lazy">
+              <div>
+                <strong>Mrs. Nkechi Okoro, Enugu</strong>
+                <p class="stars">★★★★★</p>
+                <p>"The harvest photos, farm updates, and visitation access made me feel fully involved. I now recommend the Okra and Plantain package to family members."</p>
+              </div>
             </div>
-          </div>
+          </article>
+          <article class="testimonial-slide">
+            <div class="testimonial-card">
+              <img src="img/testimonial-investor-04.jpg" alt="Mr. Chinedu Okafor" loading="lazy">
+              <div>
+                <strong>Mr. Chinedu Okafor, Port Harcourt</strong>
+                <p class="stars">★★★★★</p>
+                <p>"I appreciated that they focused on one strong combo instead of too many crops. My Plantain income is on track, and my year one Okra returns came earlier than expected."</p>
+              </div>
+            </div>
+          </article>
+          <article class="testimonial-slide">
+            <div class="testimonial-card">
+              <img src="img/testimonial-investor-05.jpg" alt="Dr. Tola Alabi" loading="lazy">
+              <div>
+                <strong>Dr. Tola Alabi, Ibadan</strong>
+                <p class="stars">★★★★★</p>
+                <p>"This partnership feels premium and trustworthy. I started with one acre, then expanded after seeing how disciplined the farm management was."</p>
+              </div>
+            </div>
+          </article>
         </div>
-
+        <div class="testimonial-controls">
+          <button type="button" data-prev aria-label="Previous testimonial">‹</button>
+          <button type="button" data-next aria-label="Next testimonial">›</button>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════
-       SUCCESS METRICS STRIP
-  ═══════════════════════════════════════════════════ -->
-  <div class="metrics-strip">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12 py-10">
-      <div class="flex flex-wrap justify-around items-center gap-8">
+  <section class="section">
+    <div class="container mission-grid">
+      <article class="panel card reveal">
+        <h3>Our Vision</h3>
+        <p>To build a trusted and sustainable agricultural enterprise that empowers people to invest, grow food, and share in collective prosperity.</p>
+      </article>
+      <article class="panel card reveal">
+        <h3>Our Mission</h3>
+        <p>To efficiently manage farms using modern agricultural practices — creating structured opportunities for individuals to invest, earn consistent returns, and become active participants in a thriving farming community.</p>
+      </article>
+    </div>
+  </section>
 
-        <div class="text-center">
-          <div class="metric-number" data-count="50" data-suffix="+">50+</div>
-          <p style="font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-top:6px;">Sites Built</p>
+  <section class="section video-section">
+    <div class="container">
+      <div class="panel card reveal video-panel">
+        <div class="video-copy">
+          <h2>Our Mission in Action</h2>
+          <p>An experience that brings a lasting memory.</p>
         </div>
-        <div class="metric-divider hidden md:block"></div>
-        <div class="text-center">
-          <div class="metric-number" data-count="98" data-suffix="%">98%</div>
-          <p style="font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-top:6px;">Client Satisfaction</p>
+        <div class="video-embed-wrap portrait-video">
+          <video class="autoplay-video" data-autoplay-video muted loop playsinline preload="metadata" controls poster="img/home-hero-okra-plantain-farm.jpg">
+            <source src="img/greater-one-agro-vid.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+          </video>
+          <!--
+          <iframe
+            class="autoplay-video"
+            src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+            title="Greater One Agro YouTube video"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+          </iframe>
+          -->
         </div>
-        <div class="metric-divider hidden md:block"></div>
-        <div class="text-center">
-          <div class="metric-number" data-count="3" data-suffix="x">3x</div>
-          <p style="font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-top:6px;">Avg. ROI Uplift</p>
-        </div>
-        <div class="metric-divider hidden md:block"></div>
-        <div class="text-center">
-          <div class="metric-number" data-count="8" data-suffix="">8</div>
-          <p style="font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-top:6px;">Industries Served</p>
-        </div>
-        <div class="metric-divider hidden md:block"></div>
-        <div class="text-center">
-          <div class="metric-number" data-count="72" data-suffix="hrs">72hrs</div>
-          <p style="font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-top:6px;">Avg. Turnaround</p>
-        </div>
-
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- ═══════════════════════════════════════════════════
-       FEATURED WORK
-  ═══════════════════════════════════════════════════ -->
-  <section class="py-28 px-6 lg:px-12">
-    <div class="max-w-7xl mx-auto">
+  <section class="section section-toned">
+    <div class="container">
+      <h2 class="section-title reveal">How Our Partnership Works</h2>
+      <p class="section-subtitle reveal">A clear process that takes you from reservation to harvest updates and earnings distribution.</p>
+      <div class="cards-grid">
+        <article class="panel card reveal process-card">
+          <span class="step">Step 1</span>
+          <h3>Reserve Your Acreage</h3>
+          <p>Choose your minimum 1-acre investment and scale up to the number of acres you want. You will receive your onboarding summary and project schedule.</p>
+        </article>
+        <article class="panel card reveal process-card">
+          <span class="step">Step 2</span>
+          <h3>We Cultivate and Manage</h3>
+          <p>Our farm team handles planting, irrigation, maintenance, and field protection.</p>
+        </article>
+        <article class="panel card reveal process-card">
+          <span class="step">Step 3</span>
+          <h3>Track Progress and Returns</h3>
+          <p>Receive updates, harvest records, and income performance reports through the project cycle.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
-      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16 reveal">
+  <section class="section">
+    <div class="container">
+      <div class="impact-band panel reveal">
         <div>
-          <div class="flex items-center gap-3 mb-4">
-            <div class="gold-line"></div>
-            <span class="section-label">Featured Projects</span>
-          </div>
-          <h2 class="section-title">Selected Work</h2>
+          <h2>Beyond Profit: Community Impact</h2>
+          <p>Your partnership also supports local farm jobs, practical training, and more resilient food supply channels.</p>
         </div>
-        <a href="work.html" class="btn-outline" style="white-space:nowrap;">
-          View All Projects
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-
-      <!-- Projects grid -->
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-        <!-- Card 1 -->
-        <div class="project-card reveal">
-          <div class="card-img-wrap">
-                <img src="img/home-hero-okra-plantain-farm.jpg"
-                  onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#152447,#1C2E50)'"
-                  alt="Aurelia Commerce storefront" />
-          </div>
-          <div style="padding:1.5rem;">
-            <div class="flex items-center gap-2 mb-3">
-              <span class="tag tag-gold">E-Commerce</span>
-              <span class="tag tag-green">Retail</span>
-            </div>
-            <h3 style="font-family:'Playfair Display',serif;font-size:1.125rem;font-weight:700;color:var(--text-light);margin-bottom:6px;">Aurelia Commerce</h3>
-            <p style="font-size:0.875rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.25rem;">Conversion-led storefront concept for a premium retail brand with a stronger trust profile.</p>
-            <div class="flex items-center justify-between">
-              <span style="font-size:0.75rem;color:var(--emerald);font-weight:500;">↑ 320% Revenue</span>
-              <a href="work.html" style="font-size:0.8rem;color:var(--gold-light);text-decoration:none;letter-spacing:0.08em;font-weight:500;">View →</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="project-card reveal reveal-delay-1">
-          <div class="card-img-wrap">
-              <img src="img/about-okra-plantain-farm.jpg"
-                 onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#1A2A4A,#0B2A2A)'"
-                 alt="Fintech Dashboard" />
-          </div>
-          <div style="padding:1.5rem;">
-            <div class="flex items-center gap-2 mb-3">
-              <span class="tag tag-gold">FinTech</span>
-              <span class="tag tag-green">Dashboard</span>
-            </div>
-            <h3 style="font-family:'Playfair Display',serif;font-size:1.125rem;font-weight:700;color:var(--text-light);margin-bottom:6px;">WealthTrack Pro</h3>
-            <p style="font-size:0.875rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.25rem;">Investor-ready dashboard concept with reporting cues, data clarity, and authority-building UX.</p>
-            <div class="flex items-center justify-between">
-              <span style="font-size:0.75rem;color:var(--emerald);font-weight:500;">↑ 4.2x Engagement</span>
-              <a href="work.html" style="font-size:0.8rem;color:var(--gold-light);text-decoration:none;letter-spacing:0.08em;font-weight:500;">View →</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="project-card reveal reveal-delay-2">
-          <div class="card-img-wrap">
-              <img src="img/partnership-feature-okra-plantain.jpg"
-                 onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#2A1A10,#1A1A2E)'"
-                 alt="Real Estate Platform" />
-          </div>
-          <div style="padding:1.5rem;">
-            <div class="flex items-center gap-2 mb-3">
-              <span class="tag tag-gold">Real Estate</span>
-            </div>
-            <h3 style="font-family:'Playfair Display',serif;font-size:1.125rem;font-weight:700;color:var(--text-light);margin-bottom:6px;">EstateVault</h3>
-            <p style="font-size:0.875rem;color:var(--text-muted);line-height:1.6;margin-bottom:1.25rem;">High-trust service website concept built to support premium lead capture.</p>
-            <div class="flex items-center justify-between">
-              <span style="font-size:0.75rem;color:var(--emerald);font-weight:500;">↑ 180% Leads</span>
-              <a href="work.html" style="font-size:0.8rem;color:var(--gold-light);text-decoration:none;letter-spacing:0.08em;font-weight:500;">View →</a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════
-       SERVICES OVERVIEW
-  ═══════════════════════════════════════════════════ -->
-  <section style="background:rgba(21,36,71,0.3);border-top:1px solid rgba(201,168,76,0.08);border-bottom:1px solid rgba(201,168,76,0.08);" class="py-24 px-6 lg:px-12">
-    <div class="max-w-7xl mx-auto">
-      <div class="text-center mb-16 reveal">
-        <div class="flex items-center justify-center gap-3 mb-4">
-          <div class="gold-line" style="background:linear-gradient(270deg,var(--gold),transparent);"></div>
-          <span class="section-label">What We Do</span>
-          <div class="gold-line"></div>
-        </div>
-        <h2 class="section-title">Built for Growth. <em style="color:var(--gold-light);font-style:italic;">Designed for Wealth.</em></h2>
-        <p style="color:var(--text-muted);max-width:520px;margin:1rem auto 0;line-height:1.75;">Every service we offer is tied directly to one outcome — growing your business and protecting your brand.</p>
-      </div>
-
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-        <div style="padding:2rem;border:1px solid rgba(201,168,76,0.1);border-radius:4px;background:rgba(11,22,40,0.6);transition:all 0.3s;" class="reveal" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.1)';this.style.transform='none'">
-          <div class="service-icon mb-5">
-            <svg width="22" height="22" fill="none" stroke="#C9A84C" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-          </div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text-light);margin-bottom:8px;">Web Design</h3>
-          <p style="font-size:0.875rem;color:var(--text-muted);line-height:1.65;">Conversion-focused design that commands authority and builds trust from the first scroll.</p>
-        </div>
-
-        <div style="padding:2rem;border:1px solid rgba(201,168,76,0.1);border-radius:4px;background:rgba(11,22,40,0.6);transition:all 0.3s;" class="reveal reveal-delay-1" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.1)';this.style.transform='none'">
-          <div class="service-icon mb-5">
-            <svg width="22" height="22" fill="none" stroke="#C9A84C" stroke-width="1.5" viewBox="0 0 24 24"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
-          </div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text-light);margin-bottom:8px;">Development</h3>
-          <p style="font-size:0.875rem;color:var(--text-muted);line-height:1.65;">Full-stack builds with blazing performance — HTML/CSS, React, Node, or headless CMS.</p>
-        </div>
-
-        <div style="padding:2rem;border:1px solid rgba(201,168,76,0.1);border-radius:4px;background:rgba(11,22,40,0.6);transition:all 0.3s;" class="reveal reveal-delay-2" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.1)';this.style.transform='none'">
-          <div class="service-icon mb-5">
-            <svg width="22" height="22" fill="none" stroke="#C9A84C" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 3h18v4H3zM3 10h18v4H3zM3 17h18v4H3z"/></svg>
-          </div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text-light);margin-bottom:8px;">E-Commerce</h3>
-          <p style="font-size:0.875rem;color:var(--text-muted);line-height:1.65;">Stores engineered to sell — from product pages to cart abandonment recovery flows.</p>
-        </div>
-
-        <div style="padding:2rem;border:1px solid rgba(201,168,76,0.1);border-radius:4px;background:rgba(11,22,40,0.6);transition:all 0.3s;" class="reveal reveal-delay-3" onmouseover="this.style.borderColor='rgba(201,168,76,0.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.1)';this.style.transform='none'">
-          <div class="service-icon mb-5">
-            <svg width="22" height="22" fill="none" stroke="#C9A84C" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-          </div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text-light);margin-bottom:8px;">Brand Identity</h3>
-          <p style="font-size:0.875rem;color:var(--text-muted);line-height:1.65;">Logo, color systems, and brand guidelines that position you as a premium player.</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════
-       TESTIMONIAL
-  ═══════════════════════════════════════════════════ -->
-  <section class="py-28 px-6 lg:px-12">
-    <div class="max-w-4xl mx-auto text-center reveal">
-      <div class="quote-mark">"</div>
-      <blockquote style="font-family:'Playfair Display',serif;font-size:clamp(1.25rem,3vw,1.75rem);font-weight:400;font-style:italic;color:var(--text-light);line-height:1.55;margin-top:-1.5rem;margin-bottom:2rem;">
-        Wealth Hub Tech didn't just build us a website — they built us a revenue machine. Within 60 days, our online sales tripled and our brand was finally taken seriously.
-      </blockquote>
-      <div style="display:flex;align-items:center;justify-content:center;gap:12px;">
-        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--emerald));"></div>
-        <div style="text-align:left;">
-          <p style="font-weight:600;color:var(--text-light);font-size:0.9375rem;">Adaeze Okonkwo</p>
-          <p style="font-size:0.8125rem;color:var(--text-muted);">Founder, LuxeGlow Beauty — Lagos</p>
+        <div class="impact-stats">
+          <article>
+            <strong>120+</strong>
+            <span>Field workers engaged</span>
+          </article>
+          <article>
+            <strong>4</strong>
+            <span>States served by produce channels</span>
+          </article>
+          <article>
+            <strong>Year-round</strong>
+            <span>Farm activity and investor updates</span>
+          </article>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════
-       CTA BAND
-  ═══════════════════════════════════════════════════ -->
-  <section style="background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(29,184,122,0.06));border-top:1px solid rgba(201,168,76,0.15);border-bottom:1px solid rgba(201,168,76,0.15);" class="py-20 px-6 lg:px-12 reveal">
-    <div class="max-w-4xl mx-auto text-center">
-      <h2 class="section-title mb-4">Ready to Build Something <em style="color:var(--gold-light);font-style:italic;">Exceptional?</em></h2>
-      <p style="color:var(--text-muted);font-size:1.0625rem;margin-bottom:2.5rem;">Let's talk about your project. Free audit, zero commitment.</p>
-      <div class="flex flex-wrap gap-4 justify-center">
-        <a href="contact.html" class="btn-gold">Start a Conversation</a>
-        <a href="work.html" class="btn-outline">See Our Portfolio</a>
+  <section class="section">
+    <div class="container panel cta-band reveal">
+      <div>
+        <h2 style="margin:0 0 0.4rem;">Ready to reserve your acres for investment?</h2>
+        <p style="margin:0; max-width:620px;">Join a partnership project built only around Okra and Plantain success, from farm establishment to harvest sales support.</p>
+      </div>
+      <div class="inline-actions">
+        <a class="btn btn-primary" href="partnership-project.html">View Full Project</a>
+        <a class="btn btn-call" href="tel:07050903309">Call Now: 07050903309</a>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════
-       FOOTER (global)
-  ═══════════════════════════════════════════════════ -->
-  <footer style="background:#080F1C;border-top:1px solid rgba(201,168,76,0.1);" class="px-6 lg:px-12 pt-16 pb-10">
-    <div class="max-w-7xl mx-auto">
-      <div class="grid md:grid-cols-4 gap-12 mb-14">
-
-        <!-- Brand col -->
-        <div class="md:col-span-2">
-          <a href="index.html" class="logo-text flex items-center gap-3 mb-5">
-            <div style="width:36px;height:36px;background:linear-gradient(135deg,#C9A84C,#E2C47A);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <span style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#0B1628;">W</span>
-            </div>
-            Wealth Hub <span>Tech</span>
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <!-- <h3>Greater One Agro Ltd</h3> -->
+         <a class="brand" href="index.html" aria-label="Greater One Agro Home">
+          <img class="footer-logo-img" src="img/logo.png" alt="Greater One Agro logo">  
+         </a>
+        <p>From a Seed of Vision to a Field of Impact</p>
+        <p>Mosunmaje, Mamu Zone, Ago-Iwoye, Ogun State</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <div class="footer-nav">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Us</a>
+          <a href="farms.html">Our Farms</a>
+          <a href="partnership-project.html">Our Partnership Project</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="contact.html">Contact Us</a>
+        </div>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p><a href="mailto:info@greateroneagro.com">info@greateroneagro.com</a></p>
+        <p><a href="tel:07050903309">07050903309</a> | <a href="tel:+2348646443020">+2348646443020</a></p>
+        <div class="trust-badges">
+          <span class="badge">Govt. Approved</span>
+          <span class="badge">Traceable and Ethical</span>
+        </div>
+        <div class="footer-socials" aria-label="Greater One Agro social links">
+          <a class="footer-social-link" href="#" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.2-1.5 1.6-1.5h1.7V5c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5V11H7v3h2.8v8h3.7z"/></svg>
           </a>
-          <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.75;max-width:300px;">
-            We design and build digital experiences that establish authority, generate leads, and grow revenue for ambitious businesses.
-          </p>
-          <div style="display:flex;gap:14px;margin-top:1.5rem;">
-            <!-- Social icons -->
-            <a href="#" style="width:36px;height:36px;border-radius:3px;border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.2)';this.style.color='var(--text-muted)'">
-              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/></svg>
-            </a>
-            <a href="#" style="width:36px;height:36px;border-radius:3px;border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.2)';this.style.color='var(--text-muted)'">
-              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
-            </a>
-            <a href="#" style="width:36px;height:36px;border-radius:3px;border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold-light)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.2)';this.style.color='var(--text-muted)'">
-              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 0 1 1.772 1.153 4.902 4.902 0 0 1 1.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 0 1-1.153 1.772 4.902 4.902 0 0 1-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 0 1-1.772-1.153 4.902 4.902 0 0 1-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 0 1 1.153-1.772A4.902 4.902 0 0 1 5.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 0 0-.748-1.15 3.098 3.098 0 0 0-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 1 1 0 10.27 5.135 5.135 0 0 1 0-10.27zm0 1.802a3.333 3.333 0 1 0 0 6.666 3.333 3.333 0 0 0 0-6.666zm5.338-3.205a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg>
-            </a>
-          </div>
+          <a class="footer-social-link" href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zm5.75-3.1a1.05 1.05 0 1 1-1.05 1.05 1.05 1.05 0 0 1 1.05-1.05z"/></svg>
+          </a>
+          <a class="footer-social-link" href="#" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 2c.5 2.6 2.1 4.2 4.5 4.5v3.1c-1.5 0-2.9-.5-4.1-1.3v6.5a6.9 6.9 0 1 1-6.9-6.9c.4 0 .8 0 1.1.1v3.3c-.3-.1-.7-.2-1.1-.2a3.7 3.7 0 1 0 3.7 3.7V2h2.8z"/></svg>
+          </a>
         </div>
-
-        <!-- Navigation links -->
-        <div>
-          <p style="font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:1.25rem;">Navigation</p>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <a href="index.html" class="footer-link">Home</a>
-            <a href="work.html" class="footer-link">Our Work</a>
-            <a href="about.html" class="footer-link">About</a>
-            <a href="contact.html" class="footer-link">Contact</a>
-          </div>
-        </div>
-
-        <!-- Contact info -->
-        <div>
-          <p style="font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:1.25rem;">Get In Touch</p>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <a href="mailto:hello@wealthhubtech.com" class="footer-link">hello@wealthhubtech.com</a>
-            <a href="tel:+2348000000000" class="footer-link">+234 800 000 0000</a>
-            <p style="color:var(--text-muted);font-size:0.875rem;margin-top:4px;">Lagos · Abuja · Remote</p>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Bottom bar -->
-      <div style="border-top:1px solid rgba(201,168,76,0.1);padding-top:1.5rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
-        <p style="font-size:0.8125rem;color:var(--text-muted);">© 2025 Wealth Hub Tech. All rights reserved.</p>
-        <p style="font-size:0.8125rem;color:var(--text-muted);">Designed & built with precision.</p>
       </div>
     </div>
+    <div class="footer-bottom">© 2026 Greater One Agro Ltd. All rights reserved.</div>
   </footer>
 
-  <!-- ═══════════════════════════════════════════════════
-       SCRIPTS
-  ═══════════════════════════════════════════════════ -->
-  <script>
-    // ── Navbar scroll behaviour ─────────────────────────
-    window.addEventListener('scroll', () => {
-      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
-    });
-
-    // ── Mobile menu toggle ──────────────────────────────
-    function toggleMenu() {
-      const menu = document.getElementById('mobile-menu');
-      const ham  = document.getElementById('hamburger');
-      menu.classList.toggle('open');
-      ham.classList.toggle('open');
-      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
-    }
-
-    // ── Scroll reveal ───────────────────────────────────
-    const revealEls = document.querySelectorAll('.reveal');
-    const observer  = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-    }, { threshold: 0.12 });
-    revealEls.forEach(el => observer.observe(el));
-
-    // ── Hero animations (CSS keyframes fallback) ────────
-    const heroStyles = `
-      @keyframes fadeUp {
-        from { opacity:0; transform:translateY(30px); }
-        to   { opacity:1; transform:translateY(0); }
-      }
-    `;
-    const styleEl = document.createElement('style');
-    styleEl.textContent = heroStyles;
-    document.head.appendChild(styleEl);
-
-    // ── Counter animation ───────────────────────────────
-    const counters = document.querySelectorAll('[data-count]');
-    const countObserver = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (!e.isIntersecting) return;
-        const el     = e.target;
-        const target = parseInt(el.dataset.count);
-        const suffix = el.dataset.suffix || '';
-        let current  = 0;
-        const step   = Math.ceil(target / 60);
-        const timer  = setInterval(() => {
-          current = Math.min(current + step, target);
-          el.textContent = current + suffix;
-          if (current >= target) clearInterval(timer);
-        }, 20);
-        countObserver.unobserve(el);
-      });
-    }, { threshold: 0.5 });
-    counters.forEach(c => countObserver.observe(c));
-  </script>
+  <a class="floating-whatsapp" href="https://wa.me/2347050903309" target="_blank" rel="noopener">WhatsApp Us</a>
+  <script src="script.js" defer></script>
 </body>
 </html>

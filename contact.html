@@ -1,400 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact — Wealth Hub Tech</title>
-  <meta name="description" content="Contact Wealth Hub Tech for premium websites, strategy, and conversion-focused digital experiences." />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            navy: { 950:'#050d1a', 900:'#0a1628', 800:'#0f2040', 700:'#162a52' },
-            gold: { 300:'#f5d97a', 400:'#e8c547', DEFAULT:'#c9961a', 600:'#b07d10' },
-            emerald: { DEFAULT:'#00c896', 600:'#00a87d' },
-          },
-          fontFamily: {
-            display: ['Playfair Display','Georgia','serif'],
-            body: ['Inter','system-ui','sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    :root {
-      --navy-950:#050d1a; --navy-900:#0a1628; --navy-800:#0f2040; --navy-700:#162a52;
-      --gold:#c9961a; --gold-light:#e8c547; --gold-pale:#f5d97a;
-      --emerald:#00c896; --charcoal-800:#1a1d24; --charcoal-700:#22262f;
-    }
-    *{box-sizing:border-box;margin:0;padding:0;}
-    html{scroll-behavior:smooth;}
-    body{font-family:'Inter',system-ui,sans-serif;background:var(--navy-950);color:#e8edf5;overflow-x:hidden;}
-    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.35;}
-
-    #main-nav{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .4s,box-shadow .4s,padding .3s;padding:1.5rem 0;}
-    #main-nav.scrolled{background:rgba(5,13,26,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 1px 0 rgba(201,150,26,.2);padding:1rem 0;}
-    .nav-logo-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--gold) 0%,var(--gold-pale) 100%);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-    .nav-logo-mark span{font-family:'Playfair Display',serif;font-weight:700;font-size:.85rem;color:var(--navy-950);}
-    .nav-link{font-size:.8rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#8fa3c4;text-decoration:none;position:relative;padding-bottom:3px;transition:color .25s;}
-    .nav-link::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width .3s ease;}
-    .nav-link:hover,.nav-link.active{color:var(--gold-pale);}
-    .nav-link:hover::after,.nav-link.active::after{width:100%;}
-    .nav-cta{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.3rem;background:transparent;border:1px solid var(--gold);color:var(--gold-pale);font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:all .3s ease;position:relative;overflow:hidden;}
-    .nav-cta::before{content:'';position:absolute;inset:0;background:var(--gold);transform:translateX(-101%);transition:transform .3s ease;z-index:-1;}
-    .nav-cta:hover{color:var(--navy-950);} .nav-cta:hover::before{transform:translateX(0);}
-    #mobile-menu{display:none;position:fixed;inset:0;background:rgba(5,13,26,.98);backdrop-filter:blur(30px);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;}
-    #mobile-menu.open{display:flex;}
-    .mobile-link{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:600;color:#c8d8f0;text-decoration:none;transition:color .2s;}
-    .mobile-link:hover{color:var(--gold-pale);}
-
-    .page-shell{position:relative;}
-    .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,150,26,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(201,150,26,.05) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 100% 100% at 50% 0%,black 25%,transparent 80%);}
-    .hero-glow{position:absolute;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(201,150,26,.08) 0%,transparent 70%);top:-120px;right:-140px;pointer-events:none;}
-    .section-eyebrow{font-size:.7rem;font-weight:500;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.85rem;display:flex;align-items:center;gap:.75rem;}
-    .section-eyebrow::before{content:'';display:block;width:30px;height:1px;background:var(--gold);}
-    .section-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4.5vw,4rem);font-weight:700;line-height:1.08;letter-spacing:-.02em;color:#e8edf5;}
-    .section-title em{font-style:italic;color:var(--gold-pale);}
-    .muted-copy{color:#4a6080;line-height:1.8;}
-
-    .panel-card{background:linear-gradient(135deg,rgba(15,32,64,.72),rgba(10,22,40,.55));border:1px solid rgba(255,255,255,.06);box-shadow:0 18px 45px rgba(0,0,0,.22);}
-    .input-field{width:100%;padding:1rem 1.05rem;background:rgba(5,13,26,.6);border:1px solid rgba(139,163,196,.15);color:#e8edf5;font:inherit;outline:none;transition:border-color .2s,box-shadow .2s,background .2s;}
-    .input-field::placeholder{color:#5a7090;}
-    .input-field:focus{border-color:rgba(201,150,26,.45);box-shadow:0 0 0 3px rgba(201,150,26,.1);background:rgba(5,13,26,.8);}
-    textarea.input-field{min-height:160px;resize:vertical;}
-    .field-label{display:block;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:#8fa3c4;margin-bottom:.55rem;}
-    .info-card{padding:1.25rem 1.35rem;border:1px solid rgba(255,255,255,.06);background:rgba(10,22,40,.45);transition:border-color .25s,transform .25s;}
-    .info-card:hover{border-color:rgba(201,150,26,.22);transform:translateY(-2px);}
-    .info-eyebrow{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:.45rem;}
-    .footer-link{font-size:.8rem;color:#4a5a70;text-decoration:none;transition:color .2s;}.footer-link:hover{color:var(--gold-pale);}
-    .fade-up{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease;}
-    .fade-up.visible{opacity:1;transform:translateY(0);}
-    .d1{transition-delay:.08s;}.d2{transition-delay:.16s;}.d3{transition-delay:.24s;}
-    .pill{display:inline-flex;align-items:center;gap:.45rem;padding:.42rem .85rem;border:1px solid rgba(201,150,26,.18);background:rgba(201,150,26,.06);font-size:.66rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-pale);}
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact Greater One Agro Ltd about Okra and Plantain Combo Farming partnership opportunities.">
+  <title>Contact Us | Greater One Agro Ltd</title>
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="shortcut icon" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/favicon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/favicon.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="img/favicon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="page-shell">
-    <nav id="main-nav">
-      <div class="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between">
-        <a href="index.html" class="flex items-center gap-3" aria-label="Wealth Hub Tech Home" style="text-decoration:none;">
-          <div class="nav-logo-mark"><span>W</span></div>
-          <div>
-            <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#e8edf5;line-height:1;letter-spacing:-.01em;">Wealth Hub<span style="color:var(--gold);">.</span>Tech</div>
-            <div style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#4a5a70;margin-top:2px;">Premium Digital Studio</div>
-          </div>
+  <div class="top-strip">
+    <div class="container">
+      <div>Direct contact for the Okra and Plantain Partnership Project</div>
+      <div class="footer-socials" aria-label="Greater One Agro social links">
+        <a class="footer-social-link" href="#" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.2-1.5 1.6-1.5h1.7V5c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5V11H7v3h2.8v8h3.7z"/></svg>
         </a>
-        <div class="hidden md:flex items-center gap-8">
-          <a href="index.html" class="nav-link">Home</a>
-          <a href="work.html" class="nav-link">Work</a>
-          <a href="about.html" class="nav-link">About</a>
-          <a href="contact.html" class="nav-link active">Contact</a>
-        </div>
-        <div class="flex items-center gap-4">
-          <a href="contact.html" class="nav-cta hidden md:inline-flex">
-            Start Project
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6H10M7 3L10 6L7 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <button id="hamburger" aria-label="Open Menu" style="display:flex;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:1001;" class="md:hidden">
-            <span style="width:24px;height:1.5px;background:#8fa3c4;display:block;"></span>
-            <span style="width:18px;height:1.5px;background:var(--gold);display:block;"></span>
-            <span style="width:24px;height:1.5px;background:#8fa3c4;display:block;"></span>
-          </button>
-        </div>
+        <a class="footer-social-link" href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zm5.75-3.1a1.05 1.05 0 1 1-1.05 1.05 1.05 1.05 0 0 1 1.05-1.05z"/></svg>
+        </a>
+        <a class="footer-social-link" href="#" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 2c.5 2.6 2.1 4.2 4.5 4.5v3.1c-1.5 0-2.9-.5-4.1-1.3v6.5a6.9 6.9 0 1 1-6.9-6.9c.4 0 .8 0 1.1.1v3.3c-.3-.1-.7-.2-1.1-.2a3.7 3.7 0 1 0 3.7 3.7V2h2.8z"/></svg>
+        </a>
       </div>
-    </nav>
-
-    <div id="mobile-menu" role="dialog" aria-modal="true">
-      <button id="menu-close" aria-label="Close Menu" style="position:absolute;top:2rem;right:1.5rem;background:none;border:none;cursor:pointer;color:#4a5a70;font-size:1.5rem;">✕</button>
-      <a href="index.html" class="mobile-link">Home</a>
-      <a href="work.html" class="mobile-link">Work</a>
-      <a href="about.html" class="mobile-link">About</a>
-      <a href="contact.html" class="mobile-link" style="color:var(--gold-pale);">Contact</a>
-      <a href="contact.html" class="nav-cta" style="margin-top:1rem;">
-        Start a Project
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6H10M7 3L10 6L7 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
     </div>
-
-    <main class="relative z-10">
-      <section class="pt-32 lg:pt-40 pb-16 relative overflow-hidden">
-        <div class="hero-grid"></div>
-        <div class="hero-glow"></div>
-        <div class="max-w-7xl mx-auto px-6 lg:px-10">
-          <div class="grid lg:grid-cols-12 gap-10 items-start">
-            <div class="lg:col-span-6">
-              <div class="section-eyebrow fade-up">Contact</div>
-              <h1 class="section-title fade-up d1 max-w-2xl">Let’s Build the <em>Digital Asset</em> That Wins Your Next Client.</h1>
-              <p class="mt-5 max-w-xl muted-copy fade-up d2">
-                Share a little about your company, your current website, and what success looks like. We’ll respond with a focused plan, not a generic sales script.
-              </p>
-
-              <div class="grid sm:grid-cols-2 gap-4 mt-10 fade-up d3">
-                <div class="info-card">
-                  <div class="info-eyebrow">Email</div>
-                  <a class="text-[#e8edf5] font-medium" href="mailto:hello@wealthhubtech.com">hello@wealthhubtech.com</a>
-                  <p class="text-sm text-[#4a6080] mt-2">Best for project briefs, RFPs, and partnership enquiries.</p>
-                </div>
-                <div class="info-card">
-                  <div class="info-eyebrow">Phone</div>
-                  <a class="text-[#e8edf5] font-medium" href="tel:+2348000000000">+234 800 000 0000</a>
-                  <p class="text-sm text-[#4a6080] mt-2">Available for discovery calls and strategy sessions.</p>
-                </div>
-                <div class="info-card sm:col-span-2">
-                  <div class="info-eyebrow">What We Deliver</div>
-                  <div class="flex flex-wrap gap-2">
-                    <span class="pill">Luxury websites</span>
-                    <span class="pill">Lead generation</span>
-                    <span class="pill">Conversion strategy</span>
-                    <span class="pill">Brand systems</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="lg:col-span-6">
-              <div class="panel-card rounded-none p-5 sm:p-7 lg:p-8 fade-up d1">
-                <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-                  <div>
-                    <p class="text-[0.68rem] tracking-[0.22em] uppercase text-[#c9961a] mb-2">Project Brief</p>
-                    <h2 class="font-display text-2xl sm:text-3xl text-[#e8edf5]">Tell us about your next move</h2>
-                  </div>
-                  <span class="pill">Response within 1 business day</span>
-                </div>
-
-                <form id="contact-form" class="grid grid-cols-1 sm:grid-cols-2 gap-5" action="#" method="post" data-api-base="https://YOUR_BACKEND_DOMAIN" novalidate>
-                  <input type="text" name="company" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;pointer-events:none;" aria-hidden="true" />
-                  <div>
-                    <label class="field-label" for="full-name">Full Name</label>
-                    <input class="input-field" id="full-name" name="full-name" type="text" placeholder="Your name" />
-                  </div>
-                  <div>
-                    <label class="field-label" for="email">Email Address</label>
-                    <input class="input-field" id="email" name="email" type="email" placeholder="you@company.com" />
-                  </div>
-                  <div>
-                    <label class="field-label" for="company-name">Company Name</label>
-                    <input class="input-field" id="company-name" name="company-name" type="text" placeholder="Company or brand name" />
-                  </div>
-                  <div>
-                    <label class="field-label" for="website-url">Current Website URL</label>
-                    <input class="input-field" id="website-url" name="website-url" type="url" placeholder="https://yourwebsite.com" />
-                  </div>
-                  <div>
-                    <label class="field-label" for="project-type">Project Type</label>
-                    <select class="input-field" id="project-type" name="project-type">
-                      <option>Website redesign</option>
-                      <option>New brand website</option>
-                      <option>E-commerce build</option>
-                      <option>Lead generation funnel</option>
-                      <option>Strategy consultation</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="field-label" for="budget">Estimated Budget</label>
-                    <select class="input-field" id="budget" name="budget">
-                      <option>Share after discovery</option>
-                      <option>Under $2,000</option>
-                      <option>$2,000 - $5,000</option>
-                      <option>$5,000 - $10,000</option>
-                      <option>$10,000+</option>
-                    </select>
-                  </div>
-                  <div class="sm:col-span-2">
-                    <label class="field-label" for="timeline">Timeline</label>
-                    <input class="input-field" id="timeline" name="timeline" type="text" placeholder="Ideal launch window" />
-                  </div>
-                  <div class="sm:col-span-2">
-                    <label class="field-label" for="message">Project Details</label>
-                    <textarea class="input-field" id="message" name="message" placeholder="What are you trying to improve: leads, credibility, sales, bookings, investor confidence, or all of the above?"></textarea>
-                  </div>
-                  <div class="sm:col-span-2 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between pt-1">
-                    <p class="text-sm text-[#4a6080] max-w-lg">We use your answers to assess fit, scope the build, and identify the fastest route to measurable return.</p>
-                    <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-gold to-[#b07d10] text-[#050d1a] text-xs font-semibold tracking-[0.16em] uppercase transition-transform duration-300 hover:-translate-y-0.5">
-                      Send Inquiry
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
-                  </div>
-                  <div class="sm:col-span-2" id="form-status" aria-live="polite" style="font-size:.8rem;color:#6b85a8;min-height:1.2rem;"></div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="py-12 sm:py-16 border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-6 lg:px-10">
-          <div class="grid md:grid-cols-3 gap-5">
-            <div class="info-card fade-up">
-              <div class="info-eyebrow">For Founders</div>
-              <h3 class="font-display text-xl text-[#e8edf5] mb-2">Brand trust, fast</h3>
-              <p class="text-sm text-[#4a6080]">We build polished front doors that help you close bigger deals and justify premium pricing.</p>
-            </div>
-            <div class="info-card fade-up d1">
-              <div class="info-eyebrow">For Growth Teams</div>
-              <h3 class="font-display text-xl text-[#e8edf5] mb-2">Conversion first</h3>
-              <p class="text-sm text-[#4a6080]">Landing pages, funnels, and UX improvements designed around measurable pipeline impact.</p>
-            </div>
-            <div class="info-card fade-up d2">
-              <div class="info-eyebrow">For Teams Scaling Up</div>
-              <h3 class="font-display text-xl text-[#e8edf5] mb-2">Systems that hold</h3>
-              <p class="text-sm text-[#4a6080]">A structure that supports new services, new markets, and new revenue without a redesign every quarter.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="relative z-10 border-t border-white/5 bg-[#050b16]">
-      <div class="max-w-7xl mx-auto px-6 lg:px-10 py-16">
-        <div class="grid md:grid-cols-4 gap-10 mb-10">
-          <div class="md:col-span-2">
-            <a href="index.html" class="flex items-center gap-3 mb-4" style="text-decoration:none;">
-              <div class="nav-logo-mark" style="width:32px;height:32px;"><span style="font-size:.75rem;">W</span></div>
-              <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#e8edf5;">Wealth Hub<span style="color:var(--gold);">.</span>Tech</div>
-            </a>
-            <p style="font-size:.82rem;color:#2e3a50;line-height:1.7;max-width:320px;">Premium digital experiences engineered for growth. We build websites that work as hard as you do.</p>
-          </div>
-          <div>
-            <div style="font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:#c9961a;margin-bottom:1.25rem;">Navigation</div>
-            <div style="display:flex;flex-direction:column;gap:.6rem;">
-              <a href="index.html" class="footer-link">Home</a>
-              <a href="work.html" class="footer-link">Our Work</a>
-              <a href="about.html" class="footer-link">About Us</a>
-              <a href="contact.html" class="footer-link" style="color:var(--gold-pale);">Contact</a>
-            </div>
-          </div>
-          <div>
-            <div style="font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:#c9961a;margin-bottom:.75rem;">Contact</div>
-            <div style="display:flex;flex-direction:column;gap:.6rem;">
-              <a href="mailto:hello@wealthhubtech.com" class="footer-link">hello@wealthhubtech.com</a>
-              <a href="tel:+2348000000000" class="footer-link">+234 800 000 0000</a>
-              <p style="font-size:.8rem;color:#4a5a70;">Lagos · Abuja · Remote</p>
-            </div>
-          </div>
-        </div>
-        <div style="padding-top:2rem;border-top:1px solid rgba(255,255,255,.04);display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;">
-          <div style="font-size:.73rem;color:#1e2a3a;">© 2026 Wealth Hub Tech. All rights reserved.</div>
-          <div style="display:flex;gap:1.5rem;">
-            <a href="#" class="footer-link" style="font-size:.73rem;">Privacy Policy</a>
-            <a href="#" class="footer-link" style="font-size:.73rem;">Terms of Service</a>
-          </div>
-        </div>
-      </div>
-    </footer>
   </div>
 
-  <script>
-    const nav = document.getElementById('main-nav');
-    window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 50); });
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="Greater One Agro Home">
+        <!-- <span class="logo-mark" aria-hidden="true"></span>
+        <span class="brand-text"><span>GREATER ONE AGRO</span><br><span>LTD</span></span> -->
+        <img class="brand-logo-img" src="img/logo.png" alt="Greater One Agro logo">
+      </a>
+      <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="farms.html">Our Farms</a></li>
+          <li><a href="partnership-project.html">Our Partnership Project</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-call" href="tel:07050903309">Call Now</a>
+    </div>
+  </header>
 
-    document.getElementById('hamburger').addEventListener('click', () => {
-      document.getElementById('mobile-menu').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    });
-    document.getElementById('menu-close').addEventListener('click', () => {
-      document.getElementById('mobile-menu').classList.remove('open');
-      document.body.style.overflow = '';
-    });
-    document.getElementById('mobile-menu').addEventListener('click', (event) => {
-      if (event.target.id === 'mobile-menu') {
-        document.getElementById('mobile-menu').classList.remove('open');
-        document.body.style.overflow = '';
-      }
-    });
+  <section class="section">
+    <div class="container contact-grid">
+      <div class="panel card reveal">
+        <h1 class="section-title">Contact Us</h1>
+        <p class="section-subtitle">Send a message and our team will guide you through the Okra and Plantain partnership process.</p>
+        <form name="contact" method="POST" action="contact-success.html" data-netlify="true" class="contact-form">
+          <input type="hidden" name="form-name" value="contact">
+          <input type="text" name="name" placeholder="Full Name" required>
+          <input type="email" name="email" placeholder="Email Address" required>
+          <input type="tel" name="phone" placeholder="Phone Number" required>
+          <textarea name="message" placeholder="How can we help you?" required></textarea>
+          <button class="btn btn-green" type="submit">Submit Enquiry</button>
+        </form>
+      </div>
+      <div class="panel card reveal">
+        <h2>Reach Us Directly</h2>
+        <p><strong>Address:</strong> Mosunmaje, Mamu Zone, Ago-Iwoye, Ogun State</p>
+        <p><strong>Email:</strong> info@greateroneagro.com</p>
+        <p><strong>Phones:</strong> +2347050903309 and +2348646443020</p>
+        <div class="inline-actions" style="margin-top:1rem;">
+          <a class="btn btn-call" href="tel:+2347050903309">Call Now</a>
+          <a class="btn btn-primary" href="https://wa.me/2347050903309" target="_blank" rel="noopener">WhatsApp Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12 });
+  <section class="section" style="padding-top:0;">
+    <div class="container map-wrap reveal">
+      <iframe src="https://www.google.com/maps?q=Mosunmaje%2C%20Mamu%20Zone%2C%20Ago-Iwoye%2C%20Ogun%20State&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Greater One Agro location map"></iframe>
+    </div>
+  </section>
 
-    document.querySelectorAll('.fade-up').forEach((element) => observer.observe(element));
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <!-- <h3>Greater One Agro Ltd</h3> -->
+        <a class="brand" href="index.html" aria-label="Greater One Agro Home">
+          <img class="footer-logo-img" src="img/logo.png" alt="Greater One Agro logo">  
+        </a>
+        <p>From a Seed of Vision to a Field of Impact</p>
+        <p>Mosunmaje, Mamu Zone, Ago-Iwoye, Ogun State</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <div class="footer-nav">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Us</a>
+          <a href="farms.html">Our Farms</a>
+          <a href="partnership-project.html">Our Partnership Project</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="contact.html">Contact Us</a>
+        </div>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p><a href="mailto:info@greateroneagro.com">info@greateroneagro.com</a></p>
+        <p><a href="tel:07050903309">07050903309</a> | <a href="tel:+2348646443020">+2348646443020</a></p>
+        <div class="trust-badges">
+          <span class="badge">Govt. Approved</span>
+          <span class="badge">Traceable and Ethical</span>
+        </div>
+        <div class="footer-socials" aria-label="Greater One Agro social links">
+          <a class="footer-social-link" href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.2-1.5 1.6-1.5h1.7V5c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5V11H7v3h2.8v8h3.7z"/></svg></a>
+          <a class="footer-social-link" href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zm5.75-3.1a1.05 1.05 0 1 1-1.05 1.05 1.05 1.05 0 0 1 1.05-1.05z"/></svg></a>
+          <a class="footer-social-link" href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 2c.5 2.6 2.1 4.2 4.5 4.5v3.1c-1.5 0-2.9-.5-4.1-1.3v6.5a6.9 6.9 0 1 1-6.9-6.9c.4 0 .8 0 1.1.1v3.3c-.3-.1-.7-.2-1.1-.2a3.7 3.7 0 1 0 3.7 3.7V2h2.8z"/></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Greater One Agro Ltd. All rights reserved.</div>
+  </footer>
 
-    const contactForm = document.getElementById('contact-form');
-    const formStatus = document.getElementById('form-status');
-
-    function setFormStatus(message, type) {
-      if (!formStatus) {
-        return;
-      }
-
-      formStatus.textContent = message;
-      if (type === 'error') {
-        formStatus.style.color = '#fca5a5';
-      } else if (type === 'success') {
-        formStatus.style.color = '#86efac';
-      } else {
-        formStatus.style.color = '#6b85a8';
-      }
-    }
-
-    if (contactForm) {
-      contactForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const submitButton = contactForm.querySelector('button[type="submit"]');
-        const originalButtonText = submitButton ? submitButton.innerHTML : '';
-        const apiBase = (contactForm.getAttribute('data-api-base') || '').trim();
-
-        if (!apiBase || apiBase.includes('YOUR_BACKEND_DOMAIN')) {
-          setFormStatus('Set your backend URL in data-api-base before submitting.', 'error');
-          return;
-        }
-
-        const payload = {
-          fullName: contactForm.querySelector('#full-name')?.value || '',
-          email: contactForm.querySelector('#email')?.value || '',
-          companyName: contactForm.querySelector('#company-name')?.value || '',
-          websiteUrl: contactForm.querySelector('#website-url')?.value || '',
-          projectType: contactForm.querySelector('#project-type')?.value || '',
-          budget: contactForm.querySelector('#budget')?.value || '',
-          timeline: contactForm.querySelector('#timeline')?.value || '',
-          message: contactForm.querySelector('#message')?.value || '',
-          company: contactForm.querySelector('input[name="company"]')?.value || '',
-          source: 'website'
-        };
-
-        setFormStatus('Sending your inquiry...', 'info');
-        if (submitButton) {
-          submitButton.disabled = true;
-          submitButton.innerHTML = 'Sending...';
-        }
-
-        try {
-          const response = await fetch(`${apiBase}/api/contact`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-
-          const data = await response.json();
-
-          if (!response.ok || !data.ok) {
-            throw new Error(data.error || 'Unable to submit inquiry right now.');
-          }
-
-          contactForm.reset();
-          setFormStatus(data.message || 'Inquiry sent successfully.', 'success');
-        } catch (error) {
-          setFormStatus(error.message || 'Unable to submit inquiry right now.', 'error');
-        } finally {
-          if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.innerHTML = originalButtonText;
-          }
-        }
-      });
-    }
-  </script>
+  <a class="floating-whatsapp" href="https://wa.me/2347050903309" target="_blank" rel="noopener">WhatsApp Us</a>
+  <script src="script.js" defer></script>
 </body>
 </html>

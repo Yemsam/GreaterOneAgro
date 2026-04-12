@@ -1,4 +1,34 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  const loadPartial = async (selector, url) => {
+    const mount = document.querySelector(selector);
+
+    if (!mount) {
+      return;
+    }
+
+    try {
+      const response = await fetch(url, { cache: 'no-cache' });
+
+      if (!response.ok) {
+        throw new Error(`Unable to load ${url}`);
+      }
+
+      mount.outerHTML = await response.text();
+    } catch {
+      mount.innerHTML = '';
+    }
+  };
+
+  await Promise.all([
+    loadPartial('[data-site-header], header.site-header', 'header.html'),
+    loadPartial('[data-site-footer], footer', 'footer.html')
+  ]);
+
+  const currentYear = new Date().getFullYear();
+  document.querySelectorAll('[data-current-year]').forEach((element) => {
+    element.textContent = String(currentYear);
+  });
+
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('.nav-links');
 
@@ -84,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const heroSlider = document.querySelector('[data-hero-slider]');
   if (heroSlider) {
+    const heroVideo = heroSlider.querySelector('[data-hero-video]');
     const heroSlides = heroSlider.querySelectorAll('[data-hero-slide]');
     const heroPrev = heroSlider.querySelector('[data-hero-prev]');
     const heroNext = heroSlider.querySelector('[data-hero-next]');
@@ -121,6 +152,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
       heroTimer = setInterval(nextHeroSlide, 6000);
     };
+
+    if (heroVideo && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const activateHeroVideo = () => {
+        heroSlider.classList.add('has-hero-video');
+      };
+
+      const playHeroVideo = () => {
+        const playPromise = heroVideo.play();
+        if (playPromise && typeof playPromise.then === 'function') {
+          playPromise
+            .then(activateHeroVideo)
+            .catch(() => {});
+        }
+      };
+
+      heroVideo.muted = true;
+      heroVideo.setAttribute('playsinline', '');
+      heroVideo.addEventListener('canplay', activateHeroVideo, { once: true });
+
+      if ('IntersectionObserver' in window) {
+        const heroVideoObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                playHeroVideo();
+              } else {
+                heroVideo.pause();
+              }
+            });
+          },
+          { threshold: 0.2 }
+        );
+
+        heroVideoObserver.observe(heroSlider);
+      } else {
+        playHeroVideo();
+      }
+    }
 
     heroPrev?.addEventListener('click', () => {
       prevHeroSlide();
@@ -182,6 +251,248 @@ document.addEventListener('DOMContentLoaded', () => {
   const openAppBtn = document.querySelector('[data-open-application]');
   const closeAppBtn = document.querySelector('[data-close-application]');
   const appForm = document.querySelector('[data-application-form]');
+  const appStepTriggers = Array.from(document.querySelectorAll('[data-app-step-trigger]'));
+  const appStepPanels = Array.from(document.querySelectorAll('[data-app-step-panel]'));
+  const appNextButtons = Array.from(document.querySelectorAll('[data-app-next]'));
+  const appBackButtons = Array.from(document.querySelectorAll('[data-app-back]'));
+  const confirmApplicationInput = appForm?.querySelector('[data-confirm-application]');
+  const investmentTypeSelect = appForm?.querySelector('select[name="investmentType"]');
+  const acreSelect = appForm?.querySelector('[data-acre-select]');
+  const customAcreWrap = appForm?.querySelector('[data-custom-acre-wrap]');
+  const customAcreInput = appForm?.querySelector('[data-custom-acre-input]');
+  const relationshipSelect = appForm?.querySelector('[data-relationship-select]');
+  const relationshipOtherWrap = appForm?.querySelector('[data-relationship-other-wrap]');
+  const relationshipOtherInput = appForm?.querySelector('[data-relationship-other-input]');
+  const bankTransferToggle = appForm?.querySelector('[data-bank-transfer-toggle]');
+  const bankTransferDetails = appForm?.querySelector('[data-bank-transfer-details]');
+  const paymentAmountDisplay = appForm?.querySelector('[data-payment-amount]');
+  const paymentProofInput = appForm?.querySelector('[data-payment-proof-input]');
+  const selectedPaymentMethodInput = appForm?.querySelector('[data-selected-payment-method]');
+  const paypalLink = appForm?.querySelector('[data-paypal-link]');
+  const paystackLink = appForm?.querySelector('[data-paystack-link]');
+  const flutterwaveLink = appForm?.querySelector('[data-flutterwave-link]');
+  const summaryContainer = appForm?.querySelector('[data-application-summary]');
+  const estimatedAmount = appForm?.querySelector('[data-estimated-amount]');
+  const appError = appForm?.querySelector('[data-app-error]');
+
+  const setAppError = (message = '') => {
+    if (appError) {
+      appError.textContent = message;
+    }
+  };
+
+  const formatCurrency = (amount) =>
+    `₦${Number(amount || 0).toLocaleString('en-NG', { maximumFractionDigits: 2 })}`;
+
+  const getSelectedAcreage = () => {
+    if (!acreSelect) {
+      return 0;
+    }
+
+    if (acreSelect.value === 'others') {
+      const customValue = Number(customAcreInput?.value || 0);
+      return customValue;
+    }
+
+    return Number(acreSelect.value || 0);
+  };
+
+  const getValidatedRelationship = () => {
+    const selectedRelationship = String(relationshipSelect?.value || '').trim();
+
+    if (!selectedRelationship) {
+      return '';
+    }
+
+    if (selectedRelationship !== 'Other') {
+      return selectedRelationship;
+    }
+
+    return String(relationshipOtherInput?.value || '').trim();
+  };
+
+  const isValidEmail = (value) => /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(value);
+  const isValidPhoneWithCountryCode = (value) => /^\+[1-9]\d{7,14}$/.test(value);
+  const isValidRelationshipText = (value) => /^[A-Za-z][A-Za-z\s'-]{1,40}$/.test(value);
+
+  const updateEstimatedAmount = () => {
+    const acres = getSelectedAcreage();
+    const amount = acres > 0 ? acres * 710600 : 0;
+
+    if (estimatedAmount) {
+      estimatedAmount.textContent = formatCurrency(amount);
+    }
+
+    if (paymentAmountDisplay) {
+      paymentAmountDisplay.textContent = formatCurrency(amount);
+    }
+  };
+
+  const selectPaymentMethod = (method) => {
+    if (selectedPaymentMethodInput) {
+      selectedPaymentMethodInput.value = method;
+    }
+
+    const methodButtons = [bankTransferToggle, paypalLink, paystackLink, flutterwaveLink];
+    methodButtons.forEach((button) => button?.classList.remove('is-selected'));
+
+    if (method === 'bank-transfer') {
+      bankTransferToggle?.classList.add('is-selected');
+    }
+
+    if (method === 'paypal') {
+      paypalLink?.classList.add('is-selected');
+    }
+
+    if (method === 'paystack') {
+      paystackLink?.classList.add('is-selected');
+    }
+
+    if (method === 'flutterwave') {
+      flutterwaveLink?.classList.add('is-selected');
+    }
+  };
+
+  const setStep = (step) => {
+    setAppError('');
+
+    appStepPanels.forEach((panel) => {
+      const isActive = panel.getAttribute('data-app-step-panel') === String(step);
+      panel.hidden = !isActive;
+      panel.classList.toggle('is-active', isActive);
+    });
+
+    appStepTriggers.forEach((trigger) => {
+      const isActive = trigger.getAttribute('data-app-step-trigger') === String(step);
+      trigger.classList.toggle('is-active', isActive);
+      trigger.setAttribute('aria-current', isActive ? 'step' : 'false');
+    });
+  };
+
+  const validateStep1 = () => {
+    if (!appForm) {
+      return false;
+    }
+
+    const emailField = appForm.querySelector('[name="email"]');
+    if (emailField && emailField.value.trim() && !isValidEmail(emailField.value.trim())) {
+      setAppError('Please enter a valid email address (example: name@example.com).');
+      emailField.focus();
+      return false;
+    }
+
+    const phoneField = appForm.querySelector('[name="phone"]');
+    if (phoneField && phoneField.value.trim() && !isValidPhoneWithCountryCode(phoneField.value.trim())) {
+      setAppError('Phone number must include country code, e.g. +2347050903309.');
+      phoneField.focus();
+      return false;
+    }
+
+    const kinPhoneField = appForm.querySelector('[name="nextOfKinPhone"]');
+    if (kinPhoneField && kinPhoneField.value.trim() && !isValidPhoneWithCountryCode(kinPhoneField.value.trim())) {
+      setAppError('Next of kin phone must include country code, e.g. +2348012345678.');
+      kinPhoneField.focus();
+      return false;
+    }
+
+    if (relationshipSelect?.value === 'Other') {
+      const customRelationship = String(relationshipOtherInput?.value || '').trim();
+
+      if (!customRelationship) {
+        setAppError('Please specify the relationship when you select Other.');
+        relationshipOtherInput?.focus();
+        return false;
+      }
+
+      if (!isValidRelationshipText(customRelationship)) {
+        setAppError('Relationship must contain letters only (numbers and symbols are not allowed).');
+        relationshipOtherInput?.focus();
+        return false;
+      }
+    }
+
+    if (relationshipOtherInput && relationshipOtherInput.value.trim() && !isValidRelationshipText(relationshipOtherInput.value.trim())) {
+      setAppError('Relationship must contain letters only (numbers and symbols are not allowed).');
+      relationshipOtherInput.focus();
+      return false;
+    }
+
+    return true;
+  };
+
+  const validateStep2 = () => {
+    if (!investmentTypeSelect || !acreSelect) {
+      return false;
+    }
+
+    if (!investmentTypeSelect.value) {
+      setAppError('Please select an investment type before continuing.');
+      investmentTypeSelect.focus();
+      return false;
+    }
+
+    if (!acreSelect.value) {
+      setAppError('Please select your acreage before continuing.');
+      acreSelect.focus();
+      return false;
+    }
+
+    if (acreSelect.value === 'others') {
+      const customValue = customAcreInput?.value.trim() || '';
+
+      if (!/^\d+(\.\d+)?$/.test(customValue)) {
+        customAcreInput?.setCustomValidity('Enter a valid number using digits and optional decimal point.');
+        setAppError('Custom acreage accepts numbers only (with optional decimal point).');
+        customAcreInput?.focus();
+        return false;
+      }
+
+      const customNumber = Number(customValue);
+      if (customNumber <= 3) {
+        customAcreInput?.setCustomValidity('Custom acreage must be greater than 3.');
+        setAppError('Custom acreage must be greater than 3.');
+        customAcreInput?.focus();
+        return false;
+      }
+
+      customAcreInput?.setCustomValidity('');
+    }
+
+    return true;
+  };
+
+  const renderSummary = () => {
+    if (!appForm || !summaryContainer) {
+      return;
+    }
+
+    const formData = new FormData(appForm);
+    const acres = getSelectedAcreage();
+    const amount = acres * 710600;
+    const relationship = getValidatedRelationship();
+    const investmentType = String(formData.get('investmentType') || '')
+      .split('-')
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' ');
+
+    const summaryRows = [
+      ['Full Name', String(formData.get('fullName') || '').trim()],
+      ['Phone', String(formData.get('phone') || '').trim()],
+      ['Email', String(formData.get('email') || '').trim()],
+      ['Occupation', String(formData.get('occupation') || '').trim()],
+      ['Address', String(formData.get('address') || '').trim()],
+      ['Next of Kin', String(formData.get('nextOfKinName') || '').trim()],
+      ['Next of Kin Phone', String(formData.get('nextOfKinPhone') || '').trim()],
+      ['Relationship', relationship],
+      ['Investment Type', investmentType],
+      ['Total Acres', acres > 0 ? String(acres) : ''],
+      ['Estimated Amount', amount > 0 ? formatCurrency(amount) : '']
+    ].filter(([, value]) => value);
+
+    summaryContainer.innerHTML = summaryRows.length
+      ? summaryRows.map(([label, value]) => `<p><strong>${label}:</strong> ${value}</p>`).join('')
+      : '<p>No details entered yet.</p>';
+  };
 
   const closeApplicationModal = () => {
     if (!appModal) {
@@ -190,12 +501,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     appModal.hidden = true;
     document.body.style.overflow = '';
+    setAppError('');
+    setStep(1);
+    appForm?.reset();
+    if (confirmApplicationInput) {
+      confirmApplicationInput.checked = false;
+    }
+    if (relationshipOtherWrap) {
+      relationshipOtherWrap.hidden = true;
+    }
+    if (customAcreWrap) {
+      customAcreWrap.hidden = true;
+    }
+    if (bankTransferDetails) {
+      bankTransferDetails.hidden = true;
+    }
+    if (paymentProofInput) {
+      paymentProofInput.value = '';
+    }
+    if (selectedPaymentMethodInput) {
+      selectedPaymentMethodInput.value = '';
+    }
+    [bankTransferToggle, paypalLink, paystackLink, flutterwaveLink].forEach((button) => button?.classList.remove('is-selected'));
+    updateEstimatedAmount();
   };
 
   if (openAppBtn && appModal) {
     openAppBtn.addEventListener('click', () => {
       appModal.hidden = false;
       document.body.style.overflow = 'hidden';
+      setStep(1);
+      updateEstimatedAmount();
     });
 
     closeAppBtn?.addEventListener('click', closeApplicationModal);
@@ -213,61 +549,143 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  if (acreSelect) {
+    acreSelect.addEventListener('change', () => {
+      setAppError('');
+      const showCustom = acreSelect.value === 'others';
+      if (customAcreWrap) {
+        customAcreWrap.hidden = !showCustom;
+      }
+
+      if (!showCustom && customAcreInput) {
+        customAcreInput.value = '';
+        customAcreInput.setCustomValidity('');
+      }
+
+      updateEstimatedAmount();
+    });
+  }
+
+  if (customAcreInput) {
+    customAcreInput.addEventListener('input', () => {
+      setAppError('');
+      const sanitized = customAcreInput.value
+        .replace(/[^0-9.]/g, '')
+        .replace(/(\..*)\./g, '$1');
+
+      customAcreInput.value = sanitized;
+      customAcreInput.setCustomValidity('');
+      updateEstimatedAmount();
+    });
+  }
+
+  if (relationshipSelect) {
+    relationshipSelect.addEventListener('change', () => {
+      setAppError('');
+      const showOther = relationshipSelect.value === 'Other';
+      if (relationshipOtherWrap) {
+        relationshipOtherWrap.hidden = !showOther;
+      }
+
+      if (!showOther && relationshipOtherInput) {
+        relationshipOtherInput.value = '';
+      }
+    });
+  }
+
+  if (relationshipOtherInput) {
+    relationshipOtherInput.addEventListener('input', () => {
+      setAppError('');
+      relationshipOtherInput.value = relationshipOtherInput.value.replace(/[^A-Za-z\s'-]/g, '');
+    });
+  }
+
+  appNextButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      setAppError('');
+      const targetStep = Number(button.getAttribute('data-app-next'));
+
+      if (targetStep === 2 && !validateStep1()) {
+        return;
+      }
+
+      if (targetStep === 3) {
+        if (!validateStep2()) {
+          return;
+        }
+        renderSummary();
+      }
+
+      if (targetStep === 4) {
+        if (!confirmApplicationInput || !confirmApplicationInput.checked) {
+          setAppError('Please select the confirmation checkbox before proceeding to payment.');
+          confirmApplicationInput?.focus();
+          return;
+        }
+      }
+
+      setStep(targetStep);
+    });
+  });
+
+  appBackButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      setAppError('');
+      const targetStep = Number(button.getAttribute('data-app-back'));
+      setStep(targetStep);
+    });
+  });
+
+  bankTransferToggle?.addEventListener('click', () => {
+    if (bankTransferDetails) {
+      bankTransferDetails.hidden = false;
+    }
+    selectPaymentMethod('bank-transfer');
+  });
+
+  paypalLink?.addEventListener('click', () => {
+    selectPaymentMethod('paypal');
+  });
+
+  paystackLink?.addEventListener('click', () => {
+    selectPaymentMethod('paystack');
+  });
+
+  flutterwaveLink?.addEventListener('click', () => {
+    selectPaymentMethod('flutterwave');
+  });
+
   if (appForm) {
     appForm.addEventListener('submit', async (event) => {
       event.preventDefault();
+      setAppError('');
 
-      const submitButton = appForm.querySelector('button[type="submit"]');
-      const originalButtonText = submitButton?.textContent || '';
-      const formData = new FormData(appForm);
-      const slots = Number(formData.get('slots') || 1);
-      const slotAmounts = {
-        1: 710600,
-        2: 1421200,
-        3: 2131800
-      };
-
-      const amountInNaira = slotAmounts[slots] || 710600;
-      const endpoint = appForm.getAttribute('data-checkout-endpoint') || '/api/create-checkout';
-      const payload = {
-        amountInNaira,
-        email: String(formData.get('email') || ''),
-        fullName: String(formData.get('fullName') || ''),
-        phone: String(formData.get('phone') || ''),
-        slots: String(formData.get('slots') || ''),
-        paymentMethod: String(formData.get('paymentMethod') || ''),
-        notes: String(formData.get('notes') || '')
-      };
-
-      if (submitButton) {
-        submitButton.disabled = true;
-        submitButton.textContent = 'Redirecting to secure checkout...';
+      if (!validateStep1() || !validateStep2()) {
+        return;
       }
 
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        if (!response.ok || !data.url) {
-          throw new Error(data.error || 'Unable to start secure checkout. Please try again.');
-        }
-
-        window.location.href = data.url;
-      } catch (error) {
-        window.alert(error.message || 'Unable to start secure checkout. Please try again.');
-
-        if (submitButton) {
-          submitButton.disabled = false;
-          submitButton.textContent = originalButtonText;
-        }
+      if (!confirmApplicationInput?.checked) {
+        setAppError('Please select the confirmation checkbox before submitting.');
+        setStep(3);
+        confirmApplicationInput?.focus();
+        return;
       }
+
+      const selectedMethod = selectedPaymentMethodInput?.value || '';
+      if (!selectedMethod) {
+        setAppError('Please select a payment method in Step 4 before submitting.');
+        setStep(4);
+        return;
+      }
+
+      if (selectedMethod === 'bank-transfer' && (!paymentProofInput || !paymentProofInput.files || paymentProofInput.files.length === 0)) {
+        setAppError('Please upload your payment screenshot before submitting.');
+        setStep(4);
+        paymentProofInput?.focus();
+        return;
+      }
+
+      appForm.submit();
     });
   }
 
