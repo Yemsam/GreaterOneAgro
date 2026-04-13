@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Wealth Hub Tech</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #071226; color: #e8edf5; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 1rem; }
+    .card { border: 1px solid rgba(201,150,26,.2); background: #0f2040; padding: 1rem; margin-bottom: 1rem; }
+    h1 { margin: .25rem 0 .8rem; }
+    h2 { margin: 0 0 .7rem; font-size: 1rem; color: #f5d97a; }
+    p { color: #9db0cf; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; border-bottom: 1px solid rgba(255,255,255,.08); padding: .55rem .35rem; font-size: .9rem; }
+    th { color: #f5d97a; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+    button { padding: .58rem .9rem; border: 1px solid rgba(201,150,26,.35); background: rgba(201,150,26,.12); color: #f5d97a; cursor: pointer; text-transform: uppercase; letter-spacing: .08em; font-size: .72rem; }
+    .secondary { border-color: rgba(139,163,196,.25); background: rgba(139,163,196,.08); color: #9db0cf; }
+    #status { min-height: 1rem; color: #9db0cf; }
+    a { color: #f5d97a; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <h1>Client Dashboard</h1>
+      <p id="status">Loading...</p>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem;">
+        <button id="refresh">Refresh Data</button>
+        <button id="sign-out" class="secondary">Sign Out</button>
+      </div>
+      <p style="margin-top:.8rem;">No account yet? <a href="dashboard-login.html">Go to login page</a>.</p>
+    </section>
+
+    <section class="card">
+      <h2>Profile</h2>
+      <div id="profile-box">No profile loaded yet.</div>
+    </section>
+
+    <section class="card">
+      <h2>Your Payments</h2>
+      <div style="overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Reference</th>
+              <th>Status</th>
+              <th>Package</th>
+              <th>Amount (NGN)</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody id="payments-body">
+            <tr><td colspan="5" style="color:#9db0cf;">No data loaded.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+    const statusEl = document.getElementById('status');
+    const profileBox = document.getElementById('profile-box');
+    const paymentsBody = document.getElementById('payments-body');
+
+    function setStatus(message, type) {
+      statusEl.textContent = message;
+      if (type === 'error') statusEl.style.color = '#fca5a5';
+      else if (type === 'success') statusEl.style.color = '#86efac';
+      else statusEl.style.color = '#9db0cf';
+    }
+
+    if (SUPABASE_URL.includes('YOUR_PROJECT_ID') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')) {
+      setStatus('Set real Supabase URL and anon key in this file.', 'error');
+    }
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function ensureSession() {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        setStatus(error.message, 'error');
+        return null;
+      }
+      const session = data?.session;
+      if (!session) {
+        setStatus('No active session. Redirecting to login...', 'error');
+        setTimeout(() => { window.location.href = 'dashboard-login.html'; }, 900);
+        return null;
+      }
+      return session;
+    }
+
+    async function loadProfile() {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, full_name, role, company_name, phone, updated_at')
+        .maybeSingle();
+
+      if (error) {
+        profileBox.textContent = error.message;
+        return;
+      }
+
+      if (!data) {
+        profileBox.textContent = 'No profile found yet.';
+        return;
+      }
+
+      profileBox.innerHTML = `
+        <p><strong>Name:</strong> ${data.full_name || '-'}</p>
+        <p><strong>Role:</strong> ${data.role || '-'}</p>
+        <p><strong>Company:</strong> ${data.company_name || '-'}</p>
+        <p><strong>Phone:</strong> ${data.phone || '-'}</p>
+      `;
+    }
+
+    async function loadPayments() {
+      const { data, error } = await supabase
+        .from('payment_orders')
+        .select('reference, status, package_title, amount_ngn, created_at')
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      if (error) {
+        paymentsBody.innerHTML = `<tr><td colspan="5" style="color:#fca5a5;">${error.message}</td></tr>`;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        paymentsBody.innerHTML = '<tr><td colspan="5" style="color:#9db0cf;">No payment records yet.</td></tr>';
+        return;
+      }
+
+      paymentsBody.innerHTML = data.map(item => {
+        const amount = Number(item.amount_ngn || 0).toLocaleString('en-NG');
+        const created = new Date(item.created_at).toLocaleString();
+        return `
+          <tr>
+            <td>${item.reference}</td>
+            <td>${String(item.status || '').toUpperCase()}</td>
+            <td>${item.package_title || '-'}</td>
+            <td>${amount}</td>
+            <td>${created}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function loadDashboard() {
+      const session = await ensureSession();
+      if (!session) {
+        return;
+      }
+
+      setStatus(`Signed in as ${session.user.email}`, 'success');
+      await Promise.all([loadProfile(), loadPayments()]);
+    }
+
+    document.getElementById('refresh').addEventListener('click', loadDashboard);
+    document.getElementById('sign-out').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      window.location.href = 'dashboard-login.html';
+    });
+
+    loadDashboard();
+  </script>
+</body>
+</html>
