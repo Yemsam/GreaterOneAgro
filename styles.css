@@ -756,13 +756,17 @@ nav {
 
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
+  align-items: stretch;
 }
 
 .team-card {
   padding: 1.2rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .team-card img {
@@ -782,6 +786,11 @@ nav {
   margin: 0.25rem 0 0.65rem;
   color: var(--muted);
   font-weight: 600;
+}
+
+.team-card .social-links {
+  margin-top: auto;
+  padding-top: 0.25rem;
 }
 
 .social-links {
