@@ -1727,6 +1727,98 @@ footer {
     height: 40px;
   }
 
+  /* Form styles: contact and application forms */
+  .contact-form,
+  .application-form {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .contact-form input[type="text"],
+  .contact-form input[type="email"],
+  .contact-form input[type="tel"],
+  .contact-form input[type="file"],
+  .contact-form select,
+  .contact-form textarea,
+  .application-form input[type="text"],
+  .application-form input[type="email"],
+  .application-form input[type="tel"],
+  .application-form select,
+  .application-form textarea,
+  .application-form input[type="file"] {
+    width: 100%;
+    padding: 0.78rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: linear-gradient(180deg, var(--white), var(--offwhite));
+    color: var(--text);
+    font-size: 0.98rem;
+    outline: none;
+    transition: box-shadow 0.18s ease, border-color 0.18s ease, transform 0.08s ease;
+  }
+
+  .contact-form input:focus,
+  .contact-form textarea:focus,
+  .contact-form select:focus,
+  .application-form input:focus,
+  .application-form textarea:focus,
+  .application-form select:focus {
+    border-color: rgba(0, 100, 0, 0.32);
+    box-shadow: 0 6px 18px rgba(0, 100, 0, 0.06);
+    transform: translateY(-1px);
+  }
+
+  .contact-form textarea,
+  .application-form textarea {
+    min-height: 110px;
+    resize: vertical;
+  }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .contact-form .btn,
+  .application-form .btn {
+    padding: 0.7rem 1.05rem;
+    border-radius: 10px;
+    font-weight: 800;
+  }
+
+  .application-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.85rem;
+  }
+
+  /* file input: simple label style */
+  input[type="file"] {
+    padding: 0.4rem 0.6rem;
+  }
+
+  /* small helper text */
+  .form-note {
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 620px) {
+    .application-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .benefits,
   .cards-grid,
   .stats-grid,
