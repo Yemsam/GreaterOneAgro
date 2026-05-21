@@ -213,11 +213,25 @@
         <h2>Register or Enquire</h2>
         <form name="partnership-enquiry" method="POST" action="contact-success.html" data-netlify="true" class="contact-form">
           <input type="hidden" name="form-name" value="partnership-enquiry">
-          <input type="text" name="name" placeholder="Name" required>
-          <input type="tel" name="phone" placeholder="Phone" required>
-          <input type="email" name="email" placeholder="Email" required>
-          <label class="checkbox-row"><input type="checkbox" name="invest1acre"> I want to invest in at least 1 acre</label>
-          <textarea name="message" placeholder="Message"></textarea>
+          <div class="form-field">
+            <label for="partnershipNameInput">Name</label>
+            <input id="partnershipNameInput" type="text" name="name" placeholder="Name" required>
+          </div>
+          <div class="form-field">
+            <label for="partnershipPhoneInput">Phone</label>
+            <input id="partnershipPhoneInput" type="tel" name="phone" placeholder="Phone" required>
+          </div>
+          <div class="form-field">
+            <label for="partnershipEmailInput">Email</label>
+            <input id="partnershipEmailInput" type="email" name="email" placeholder="Email" required>
+          </div>
+          <div class="form-field form-field-checkbox">
+            <label class="checkbox-row"><input type="checkbox" name="invest1acre"> I want to invest in at least 1 acre</label>
+          </div>
+          <div class="form-field">
+            <label for="partnershipMessageInput">Message</label>
+            <textarea id="partnershipMessageInput" name="message" placeholder="Message"></textarea>
+          </div>
           <div class="form-actions">
             <button class="btn btn-green" type="submit">Submit Enquiry</button>
           </div>

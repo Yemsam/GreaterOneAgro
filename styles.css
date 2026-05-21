@@ -1200,6 +1200,34 @@ textarea {
   gap: 0.35rem;
 }
 
+.contact-form .form-field {
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(0, 100, 0, 0.16);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 251, 244, 0.96));
+  box-shadow: 0 10px 20px rgba(10, 50, 10, 0.04);
+}
+
+.contact-form .form-field:focus-within {
+  border-color: rgba(0, 100, 0, 0.34);
+  box-shadow: 0 0 0 4px rgba(0, 100, 0, 0.08), 0 10px 20px rgba(10, 50, 10, 0.06);
+}
+
+.contact-form .form-field label {
+  font-weight: 700;
+  color: #264726;
+  font-size: 0.92rem;
+}
+
+.contact-form .form-field-checkbox {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+.contact-form .form-field-checkbox .checkbox-row {
+  margin: 0;
+}
+
 .form-field label {
   font-weight: 700;
   color: #264726;
