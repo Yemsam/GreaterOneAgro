@@ -1,82 +1,105 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Payment Status - Wealth Hub Tech</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0a1628;
-      color: #e8edf5;
-      display: grid;
-      min-height: 100vh;
-      place-items: center;
-      padding: 1rem;
-    }
-    .card {
-      width: min(620px, 100%);
-      background: #10203a;
-      border: 1px solid rgba(201,150,26,.3);
-      padding: 1.5rem;
-    }
-    h1 { margin: 0 0 .75rem; font-size: 1.25rem; }
-    p { margin: 0 0 .75rem; line-height: 1.5; color: #9db0cf; }
-    .ok { color: #86efac; }
-    .err { color: #fca5a5; }
-    .muted { color: #7f96b8; font-size: .9rem; }
-    a { color: #f5d97a; }
-  </style>
-</head>
-<body>
-  <main class="card">
-    <h1>Payment Verification</h1>
-    <p id="status" class="muted">Checking your payment status...</p>
-    <p class="muted">If this takes too long, return to <a href="contact.html">contact page</a>.</p>
-  </main>
-
-  <script>
-    (async function verifyPayment() {
-      const statusEl = document.getElementById('status');
-      const params = new URLSearchParams(window.location.search);
-      const reference = params.get('reference') || params.get('trxref') || params.get('ref');
-
-      const apiBase = 'https://YOUR_BACKEND_DOMAIN';
-
-      if (!reference) {
-        statusEl.textContent = 'No payment reference found in URL.';
-        statusEl.className = 'err';
-        return;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Status - GreaterOne Agro Ltd</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #0a1628;
+        color: #e8edf5;
+        display: grid;
+        min-height: 100vh;
+        place-items: center;
+        padding: 1rem;
       }
-
-      if (apiBase.includes('YOUR_BACKEND_DOMAIN')) {
-        statusEl.textContent = 'Set your backend URL in payment-success.html first.';
-        statusEl.className = 'err';
-        return;
+      .card {
+        width: min(620px, 100%);
+        background: #10203a;
+        border: 1px solid rgba(201, 150, 26, 0.3);
+        padding: 1.5rem;
       }
+      h1 {
+        margin: 0 0 0.75rem;
+        font-size: 1.25rem;
+      }
+      p {
+        margin: 0 0 0.75rem;
+        line-height: 1.5;
+        color: #9db0cf;
+      }
+      .ok {
+        color: #86efac;
+      }
+      .err {
+        color: #fca5a5;
+      }
+      .muted {
+        color: #7f96b8;
+        font-size: 0.9rem;
+      }
+      a {
+        color: #f5d97a;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Payment Verification</h1>
+      <p id="status" class="muted">Checking your payment status...</p>
+      <p class="muted">
+        If this takes too long, return to
+        <a href="contact.html">contact page</a>.
+      </p>
+    </main>
 
-      try {
-        const response = await fetch(`${apiBase}/api/payments-verify?reference=${encodeURIComponent(reference)}`);
-        const data = await response.json();
+    <script>
+      (async function verifyPayment() {
+        const statusEl = document.getElementById("status");
+        const params = new URLSearchParams(window.location.search);
+        const reference =
+          params.get("reference") || params.get("trxref") || params.get("ref");
 
-        if (!response.ok || !data.ok) {
-          throw new Error(data.error || 'Verification failed');
+        const apiBase = "https://YOUR_BACKEND_DOMAIN";
+
+        if (!reference) {
+          statusEl.textContent = "No payment reference found in URL.";
+          statusEl.className = "err";
+          return;
         }
 
-        const payment = data.payment || {};
-        if (payment.status === 'paid') {
-          statusEl.textContent = `Payment successful. Reference: ${payment.reference}`;
-          statusEl.className = 'ok';
-        } else {
-          statusEl.textContent = `Payment is currently '${payment.status}'. Reference: ${payment.reference}`;
-          statusEl.className = 'muted';
+        if (apiBase.includes("YOUR_BACKEND_DOMAIN")) {
+          statusEl.textContent =
+            "Set your backend URL in payment-success.html first.";
+          statusEl.className = "err";
+          return;
         }
-      } catch (error) {
-        statusEl.textContent = error.message || 'Unable to verify payment.';
-        statusEl.className = 'err';
-      }
-    })();
-  </script>
-</body>
+
+        try {
+          const response = await fetch(
+            `${apiBase}/api/payments-verify?reference=${encodeURIComponent(reference)}`,
+          );
+          const data = await response.json();
+
+          if (!response.ok || !data.ok) {
+            throw new Error(data.error || "Verification failed");
+          }
+
+          const payment = data.payment || {};
+          if (payment.status === "paid") {
+            statusEl.textContent = `Payment successful. Reference: ${payment.reference}`;
+            statusEl.className = "ok";
+          } else {
+            statusEl.textContent = `Payment is currently '${payment.status}'. Reference: ${payment.reference}`;
+            statusEl.className = "muted";
+          }
+        } catch (error) {
+          statusEl.textContent = error.message || "Unable to verify payment.";
+          statusEl.className = "err";
+        }
+      })();
+    </script>
+  </body>
 </html>
