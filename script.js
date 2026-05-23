@@ -281,6 +281,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  const getConfiguredPaystackUrl = () => String(paystackLink?.dataset.paystackUrl || '').trim();
+
+  const openPaystackCheckout = () => {
+    const paystackUrl = getConfiguredPaystackUrl();
+
+    if (!paystackUrl) {
+      setAppError('Paystack payment link is not configured yet.');
+      return false;
+    }
+
+    window.open(paystackUrl, '_blank', 'noopener,noreferrer');
+    return true;
+  };
+
   const formatCurrency = (amount) =>
     `₦${Number(amount || 0).toLocaleString('en-NG', { maximumFractionDigits: 2 })}`;
 
@@ -647,8 +661,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     selectPaymentMethod('paypal');
   });
 
-  paystackLink?.addEventListener('click', () => {
+  paystackLink?.addEventListener('click', (event) => {
+    event.preventDefault();
     selectPaymentMethod('paystack');
+    openPaystackCheckout();
   });
 
   flutterwaveLink?.addEventListener('click', () => {
@@ -675,6 +691,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!selectedMethod) {
         setAppError('Please select a payment method in Step 4 before submitting.');
         setStep(4);
+        return;
+      }
+
+      if (selectedMethod === 'paystack') {
+        if (!openPaystackCheckout()) {
+          setStep(4);
+        }
+
         return;
       }
 
