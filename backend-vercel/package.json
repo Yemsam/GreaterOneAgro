@@ -1,0 +1,17 @@
+{
+  "name": "wealthhubtech-backend-vercel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Level 1 forms backend for WealthHubTech",
+  "main": "api/contact.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.54.0"
+  },
+  "devDependencies": {
+    "vercel": "^44.0.0"
+  }
+}

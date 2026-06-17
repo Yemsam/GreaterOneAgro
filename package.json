@@ -1,0 +1,28 @@
+{
+  "name": "greateroneagro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:netlify": "npx netlify-cli dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yemsam/GreaterOneAgro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Yemsam/GreaterOneAgro/issues"
+  },
+  "homepage": "https://github.com/Yemsam/GreaterOneAgro#readme",
+  "dependencies": {
+    "stripe": "^21.0.1"
+  },
+  "devDependencies": {
+    "netlify-cli": "^24.9.0"
+  }
+}

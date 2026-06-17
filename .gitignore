@@ -1,0 +1,10 @@
+# Ignore macOS junk
+.DS_Store
+
+# Ignore Windows junk
+Thumbs.db
+
+# Ignore any temporary or build folders (if you ever add them)
+node_modules/
+dist/
+build/
