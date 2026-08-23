@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard.html
+Disallow: /dashboard-login.html
+Disallow: /application-success.html
+Disallow: /contact-success.html
+Disallow: /payment-success.html
+Disallow: /work.html
+Disallow: /backend-vercel/
+
+Sitemap: https://greateroneagro.com/sitemap.xml

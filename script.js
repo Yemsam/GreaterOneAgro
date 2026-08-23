@@ -48,9 +48,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const current = window.location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav-links a').forEach((link) => {
+  document.querySelectorAll('.nav-links a, .footer-nav a').forEach((link) => {
     if (link.getAttribute('href') === current) {
       link.classList.add('active');
+      link.setAttribute('aria-current', 'page');
+    } else {
+      link.removeAttribute('aria-current');
     }
   });
 
